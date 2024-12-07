@@ -1,12 +1,7 @@
 import clsx from "clsx";
 import React from "react";
 import type { ActionManager } from "../actions/manager";
-import {
-  CLASSES,
-  DEFAULT_SIDEBAR,
-  LIBRARY_SIDEBAR_WIDTH,
-  TOOL_TYPE,
-} from "../constants";
+import { CLASSES, DEFAULT_SIDEBAR, LIBRARY_SIDEBAR_WIDTH } from "../constants";
 import { showSelectedShapeActions } from "../element";
 import type { NonDeletedExcalidrawElement } from "../element/types";
 import type { Language } from "../i18n";
@@ -56,7 +51,6 @@ import { EyeDropper, activeEyeDropperAtom } from "./EyeDropper";
 import { mutateElement } from "../element/mutateElement";
 import { ShapeCache } from "../scene/ShapeCache";
 import Scene from "../scene/Scene";
-import { LaserPointerButton } from "./LaserPointerButton";
 import { TTDDialog } from "./TTDDialog/TTDDialog";
 import { Stats } from "./Stats";
 import { actionToggleStats } from "../actions";
@@ -315,26 +309,6 @@ const LayerUI = ({
                             />
                           </Stack.Row>
                         </Island>
-                        {isCollaborating && (
-                          <Island
-                            style={{
-                              marginLeft: 8,
-                              alignSelf: "center",
-                              height: "fit-content",
-                            }}
-                          >
-                            <LaserPointerButton
-                              title={t("toolBar.laser")}
-                              checked={
-                                appState.activeTool.type === TOOL_TYPE.laser
-                              }
-                              onChange={() =>
-                                app.setActiveTool({ type: TOOL_TYPE.laser })
-                              }
-                              isMobile
-                            />
-                          </Island>
-                        )}
                       </Stack.Row>
                     </Stack.Col>
                   </div>

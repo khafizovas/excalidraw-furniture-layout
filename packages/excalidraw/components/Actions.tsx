@@ -33,6 +33,7 @@ import {
 import clsx from "clsx";
 import { actionToggleZenMode } from "../actions";
 import { Tooltip } from "./Tooltip";
+import { LaserPointerButton } from "./LaserPointerButton";
 import {
   shouldAllowVerticalAlign,
   suppportsHorizontalAlign,
@@ -45,12 +46,11 @@ import {
   extraToolsIcon,
   frameToolIcon,
   mermaidLogoIcon,
-  laserPointerToolIcon,
   MagicIcon,
 } from "./icons";
 import { KEYS } from "../keys";
 import { useTunnels } from "../context/tunnels";
-import { CLASSES } from "../constants";
+import { CLASSES, TOOL_TYPE } from "../constants";
 
 export const canChangeStrokeColor = (
   appState: UIAppState,
@@ -274,7 +274,6 @@ export const ShapesSwitcher = ({
   const [isExtraToolsMenuOpen, setIsExtraToolsMenuOpen] = useState(false);
 
   const frameToolSelected = activeTool.type === "frame";
-  const laserToolSelected = activeTool.type === "laser";
   const embeddableToolSelected = activeTool.type === "embeddable";
 
   const { TTDDialogTriggerTunnel } = useTunnels();
@@ -330,18 +329,21 @@ export const ShapesSwitcher = ({
           />
         );
       })}
+
+      <LaserPointerButton
+        title={t("toolBar.laser")}
+        checked={appState.activeTool.type === TOOL_TYPE.laser}
+        onChange={() => app.setActiveTool({ type: TOOL_TYPE.laser })}
+        isMobile
+      />
+
       <div className="App-toolbar__divider" />
 
       <DropdownMenu open={isExtraToolsMenuOpen}>
         <DropdownMenu.Trigger
           className={clsx("App-toolbar__extra-tools-trigger", {
             "App-toolbar__extra-tools-trigger--selected":
-              frameToolSelected ||
-              embeddableToolSelected ||
-              // in collab we're already highlighting the laser button
-              // outside toolbar, so let's not highlight extra-tools button
-              // on top of it
-              (laserToolSelected && !app.props.isCollaborating),
+              frameToolSelected || embeddableToolSelected,
           })}
           onToggle={() => setIsExtraToolsMenuOpen(!isExtraToolsMenuOpen)}
           title={t("toolBar.extraTools")}
@@ -388,15 +390,6 @@ export const ShapesSwitcher = ({
             selected={embeddableToolSelected}
           >
             {t("toolBar.embeddable")}
-          </DropdownMenu.Item>
-          <DropdownMenu.Item
-            onSelect={() => app.setActiveTool({ type: "laser" })}
-            icon={laserPointerToolIcon}
-            data-testid="toolbar-laser"
-            selected={laserToolSelected}
-            shortcut={KEYS.K.toLocaleUpperCase()}
-          >
-            {t("toolBar.laser")}
           </DropdownMenu.Item>
           <div style={{ margin: "6px 0", fontSize: 14, fontWeight: 600 }}>
             Generate
