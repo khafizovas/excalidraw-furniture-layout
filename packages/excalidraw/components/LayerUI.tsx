@@ -135,7 +135,6 @@ const LayerUI = ({
   renderWelcomeScreen,
   children,
   app,
-  isCollaborating,
   generateLinkForSelection,
 }: LayerUIProps) => {
   const device = useDevice();
