@@ -498,16 +498,6 @@ function CommandPaletteInner({
         }, []),
         ...toolCommands,
         {
-          label: t("toolBar.lock"),
-          category: DEFAULT_CATEGORIES.tools,
-          icon: uiAppState.activeTool.locked ? LockedIcon : UnlockedIcon,
-          shortcut: KEYS.Q.toLocaleUpperCase(),
-          viewMode: false,
-          perform: () => {
-            app.toggleLock();
-          },
-        },
-        {
           label: `${t("labels.textToDiagram")}...`,
           category: DEFAULT_CATEGORIES.tools,
           icon: brainIconThin,

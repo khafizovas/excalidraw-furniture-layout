@@ -32,7 +32,6 @@ type MobileMenuProps = {
   renderImageExportDialog: () => React.ReactNode;
   setAppState: React.Component<any, AppState>["setState"];
   elements: readonly NonDeletedExcalidrawElement[];
-  onLockToggle: () => void;
   onHandToolToggle: () => void;
   onPenModeToggle: AppClassProperties["togglePenMode"];
 
@@ -53,7 +52,6 @@ export const MobileMenu = ({
   elements,
   actionManager,
   setAppState,
-  onLockToggle,
   onHandToolToggle,
   onPenModeToggle,
 
@@ -102,12 +100,7 @@ export const MobileMenu = ({
                     isMobile
                     penDetected={appState.penDetected}
                   />
-                  <LockButton
-                    checked={appState.activeTool.locked}
-                    onChange={onLockToggle}
-                    title={t("toolBar.lock")}
-                    isMobile
-                  />
+                  <LockButton title={t("toolBar.lock")} isMobile />
                   <HandButton
                     checked={isHandToolActive(appState)}
                     onChange={() => onHandToolToggle()}

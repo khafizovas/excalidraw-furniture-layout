@@ -67,7 +67,6 @@ interface LayerUIProps {
   canvas: HTMLCanvasElement;
   setAppState: React.Component<any, AppState>["setState"];
   elements: readonly NonDeletedExcalidrawElement[];
-  onLockToggle: () => void;
   onHandToolToggle: () => void;
   onPenModeToggle: AppClassProperties["togglePenMode"];
   showExitZenModeBtn: boolean;
@@ -126,7 +125,6 @@ const LayerUI = ({
   setAppState,
   elements,
   canvas,
-  onLockToggle,
   onHandToolToggle,
   onPenModeToggle,
   showExitZenModeBtn,
@@ -286,11 +284,7 @@ const LayerUI = ({
                               title={t("toolBar.penMode")}
                               penDetected={appState.penDetected}
                             />
-                            <LockButton
-                              checked={appState.activeTool.locked}
-                              onChange={onLockToggle}
-                              title={t("toolBar.lock")}
-                            />
+                            <LockButton title={t("toolBar.lock")} />
 
                             <div className="App-toolbar__divider" />
 
@@ -498,7 +492,6 @@ const LayerUI = ({
           renderJSONExportDialog={renderJSONExportDialog}
           renderImageExportDialog={renderImageExportDialog}
           setAppState={setAppState}
-          onLockToggle={onLockToggle}
           onHandToolToggle={onHandToolToggle}
           onPenModeToggle={onPenModeToggle}
           renderTopRightUI={renderTopRightUI}

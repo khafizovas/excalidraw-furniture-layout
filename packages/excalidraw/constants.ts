@@ -391,7 +391,7 @@ export const DEFAULT_ELEMENT_PROPS: {
   strokeStyle: "solid",
   roughness: ROUGHNESS.artist,
   opacity: 100,
-  locked: false,
+  locked: true,
 };
 
 export const LIBRARY_SIDEBAR_TAB = "library";

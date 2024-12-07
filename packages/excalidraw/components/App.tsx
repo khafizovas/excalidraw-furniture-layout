@@ -1568,7 +1568,6 @@ class App extends React.Component<AppProps, AppState> {
                           setAppState={this.setAppState}
                           actionManager={this.actionManager}
                           elements={this.scene.getNonDeletedElements()}
-                          onLockToggle={this.toggleLock}
                           onPenModeToggle={this.togglePenMode}
                           onHandToolToggle={this.onHandToolToggle}
                           langCode={getLanguage().code}
@@ -3571,30 +3570,6 @@ class App extends React.Component<AppProps, AppState> {
     gesture.pointers.delete(event.pointerId);
   };
 
-  toggleLock = (source: "keyboard" | "ui" = "ui") => {
-    if (!this.state.activeTool.locked) {
-      trackEvent(
-        "toolbar",
-        "toggleLock",
-        `${source} (${this.device.editor.isMobile ? "mobile" : "desktop"})`,
-      );
-    }
-    this.setState((prevState) => {
-      return {
-        activeTool: {
-          ...prevState.activeTool,
-          ...updateActiveTool(
-            this.state,
-            prevState.activeTool.locked
-              ? { type: "selection" }
-              : prevState.activeTool,
-          ),
-          locked: !prevState.activeTool.locked,
-        },
-      };
-    });
-  };
-
   updateFrameRendering = (
     opts:
       | Partial<AppState["frameRendering"]>
@@ -4456,9 +4431,6 @@ class App extends React.Component<AppProps, AppState> {
             }));
           }
           this.setActiveTool({ type: shape });
-          event.stopPropagation();
-        } else if (event.key === KEYS.Q) {
-          this.toggleLock("keyboard");
           event.stopPropagation();
         }
       }

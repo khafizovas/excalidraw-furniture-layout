@@ -2,22 +2,15 @@ import "./ToolIcon.scss";
 
 import clsx from "clsx";
 import type { ToolButtonSize } from "./ToolButton";
-import { LockedIcon, UnlockedIcon } from "./icons";
+import { LockedIcon } from "./icons";
 
 type LockIconProps = {
   title?: string;
   name?: string;
-  checked: boolean;
-  onChange?(): void;
   isMobile?: boolean;
 };
 
 const DEFAULT_SIZE: ToolButtonSize = "medium";
-
-const ICONS = {
-  CHECKED: LockedIcon,
-  UNCHECKED: UnlockedIcon,
-};
 
 export const LockButton = (props: LockIconProps) => {
   return (
@@ -35,14 +28,12 @@ export const LockButton = (props: LockIconProps) => {
         className="ToolIcon_type_checkbox"
         type="checkbox"
         name={props.name}
-        onChange={props.onChange}
-        checked={props.checked}
+        checked
+        readOnly
         aria-label={props.title}
         data-testid="toolbar-lock"
       />
-      <div className="ToolIcon__icon">
-        {props.checked ? ICONS.CHECKED : ICONS.UNCHECKED}
-      </div>
+      <div className="ToolIcon__icon">{LockedIcon}</div>
     </label>
   );
 };
