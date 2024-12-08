@@ -17,8 +17,6 @@ import type { ShortcutName } from "../../actions/shortcuts";
 import { getShortcutFromShortcutName } from "../../actions/shortcuts";
 import { DEFAULT_SIDEBAR, EVENT } from "../../constants";
 import {
-  LockedIcon,
-  UnlockedIcon,
   clockIcon,
   searchIcon,
   boltIcon,
