@@ -253,6 +253,8 @@ const _renderStaticScene = ({
     );
   }
 
+  // TODO: Добавить линейки масштаба
+
   const groupsToBeAddedToFrame = new Set<string>();
 
   visibleElements.forEach((element) => {

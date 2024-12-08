@@ -65,6 +65,7 @@ import type {
   ExcalidrawFrameLikeElement,
   ExcalidrawImageElement,
   ExcalidrawLinearElement,
+  ExcalidrawRectangleElement,
   ExcalidrawTextElement,
   GroupId,
   NonDeleted,
@@ -376,6 +377,32 @@ const renderSelectionBorder = (
     );
   }
   context.restore();
+};
+
+// TODO: Округлять значения
+// TODO: Учитывать коэффициент масштабирования при вычислении размеров
+// TODO: Масштабировать надпись и отступ в соответствии с масштабом
+const renderSelectedRectangleSize = (
+  context: CanvasRenderingContext2D,
+  appState: InteractiveCanvasAppState,
+  rectangle: ExcalidrawRectangleElement,
+) => {
+  console.log("Debug", "renderSelectedRectangleSize", "appState", appState);
+  console.log("Debug", "renderSelectedRectangleSize", "rectangle", rectangle);
+
+  const { width, height, x, y } = rectangle;
+  const widthStr = `${width}м`;
+  const heightStr = `${height}м`;
+  const offset = 15;
+  const fontSize = 10;
+
+  context.fillStyle = rectangle.strokeColor;
+  context.font = String(fontSize);
+  context.textAlign = "right";
+  context.textBaseline = "top";
+
+  const text = `${widthStr} x ${heightStr}`;
+  context.fillText(text, x + width, y - offset);
 };
 
 const renderBindingHighlight = (
@@ -994,9 +1021,11 @@ const _renderInteractiveScene = ({
     context.translate(appState.scrollX, appState.scrollY);
 
     if (selectedElements.length === 1) {
+      const selectedElement = selectedElements[0];
+
       context.fillStyle = oc.white;
       const transformHandles = getTransformHandles(
-        selectedElements[0],
+        selectedElement,
         appState.zoom,
         elementsMap,
         "mouse", // when we render we don't know which pointer type so use mouse,
@@ -1015,8 +1044,12 @@ const _renderInteractiveScene = ({
           renderConfig,
           appState,
           transformHandles,
-          selectedElements[0].angle,
+          selectedElement.angle,
         );
+
+        if (selectedElement.type === "rectangle") {
+          renderSelectedRectangleSize(context, appState, selectedElement);
+        }
       }
 
       if (appState.croppingElementId && !appState.isCropping) {
