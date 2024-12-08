@@ -252,16 +252,13 @@ const LayerUI = ({
                           "zen-mode": appState.zenModeEnabled,
                         })}
                       >
-                        {/* TODO: Условие отображения */}
-                        {true && (
-                          <Island
-                            style={{
-                              marginRight: 20,
-                            }}
-                          >
-                            <RoomPlanButton />
-                          </Island>
-                        )}
+                        <Island
+                          style={{
+                            marginRight: 20,
+                          }}
+                        >
+                          <RoomPlanButton />
+                        </Island>
                         <Island
                           padding={1}
                           className={clsx("App-toolbar", {

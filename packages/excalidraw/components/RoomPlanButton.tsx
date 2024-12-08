@@ -3,6 +3,7 @@ import { Button } from "./Button";
 import "./RoomPlanButton.scss";
 
 export default function RoomPlanButton() {
+  // TODO: Проверка условия отображения
   return (
     <Button
       onSelect={() => {
