@@ -9,6 +9,7 @@ import {
 import {
   boltIcon,
   DeviceDesktopIcon,
+  ExcalLogo,
   ExportIcon,
   ExportImageIcon,
   HelpIcon,
@@ -391,5 +392,21 @@ export const LiveCollaborationTrigger = ({
     </DropdownMenuItem>
   );
 };
-
 LiveCollaborationTrigger.displayName = "LiveCollaborationTrigger";
+
+export const LicenceAgreement = () => {
+  const setAppState = useExcalidrawSetAppState();
+
+  return (
+    <DropdownMenuItem
+      icon={ExcalLogo}
+      aria-label="Лицензионное соглашение"
+      onSelect={() => {
+        setAppState({ openDialog: { name: "licenceAgreement" } });
+      }}
+    >
+      Лицензионное соглашение
+    </DropdownMenuItem>
+  );
+};
+LicenceAgreement.displayName = "LicenceAgreement";

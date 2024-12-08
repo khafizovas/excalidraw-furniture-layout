@@ -31,6 +31,7 @@ export const AppMainMenu: React.FC<{
       <MainMenu.DefaultItems.Help />
       <MainMenu.DefaultItems.ClearCanvas />
       <MainMenu.Separator />
+      <MainMenu.DefaultItems.LicenceAgreement />
       <MainMenu.ItemLink
         icon={loginIcon}
         href={`${import.meta.env.VITE_APP_PLUS_APP}${

@@ -56,6 +56,7 @@ import { Stats } from "./Stats";
 import { actionToggleStats } from "../actions";
 import ElementLinkDialog from "./ElementLinkDialog";
 import RoomPlanButton from "./RoomPlanButton";
+import { LicenceAgreement } from "./LicenceAgreement";
 
 import "./LayerUI.scss";
 import "./Toolbar.scss";
@@ -180,6 +181,18 @@ const LayerUI = ({
         onExportImage={onExportImage}
         onCloseRequest={() => setAppState({ openDialog: null })}
         name={app.getName()}
+      />
+    );
+  };
+
+  const renderLicenceAgreement = () => {
+    if (appState.openDialog?.name !== "licenceAgreement") {
+      return null;
+    }
+
+    return (
+      <LicenceAgreement
+        onCloseRequest={() => setAppState({ openDialog: null })}
       />
     );
   };
@@ -467,6 +480,7 @@ const LayerUI = ({
       )}
       <tunnels.OverwriteConfirmDialogTunnel.Out />
       {renderImageExportDialog()}
+      {renderLicenceAgreement()}
       {renderJSONExportDialog()}
       {appState.pasteDialog.shown && (
         <PasteChartDialog
