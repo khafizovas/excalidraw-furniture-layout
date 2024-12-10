@@ -283,7 +283,7 @@ export const TTDDialogBase = withInternalFallback(
                   label={t("labels.prompt")}
                   panelAction={{
                     action: onGenerate,
-                    label: "Generate",
+                    label: t("toolBar.generate"),
                     icon: ArrowRightIcon,
                   }}
                   onTextSubmitInProgess={onTextSubmitInProgess}

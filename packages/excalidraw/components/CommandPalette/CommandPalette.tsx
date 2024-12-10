@@ -61,13 +61,14 @@ import {
 
 const lastUsedPaletteItem = atom<CommandPaletteItem | null>(null);
 
+// TODO: Не подхватывает нужную локаль
 export const DEFAULT_CATEGORIES = {
-  app: "App",
-  export: "Export",
-  tools: "Tools",
-  editor: "Editor",
-  elements: "Elements",
-  links: "Links",
+  app: "Приложение", // t("commandPalette.categories.app"),
+  export: "Экспорт", // t("commandPalette.categories.export"),
+  tools: "Инструменты", // t("commandPalette.categories.tools"),
+  editor: "Редактор", // t("commandPalette.categories.editor"),
+  elements: "Элементы", // t("commandPalette.categories.elements"),
+  links: "Ссылки", // t("commandPalette.categories.links"),
 };
 
 const getCategoryOrder = (category: string) => {

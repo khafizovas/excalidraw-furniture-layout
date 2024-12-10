@@ -113,6 +113,8 @@
     "unbindText": "Отвязать текст",
     "bindText": "Привязать текст к контейнеру",
     "createContainerFromText": "Поместить текст в контейнер",
+    "theme": "Тема",
+    "toggleGrid": "Переключить сетку",
     "link": {
       "edit": "Редактировать ссылку",
       "editEmbed": "",
@@ -138,12 +140,20 @@
     "removeAllElementsFromFrame": "",
     "eyeDropper": "Взять образец цвета с холста",
     "textToDiagram": "Текст в диаграмму",
-    "prompt": ""
+    "prompt": "",
+    "clearCanvas": "Очистить полотно"
   },
   "library": {
     "noItems": "Пока ничего не добавлено...",
     "hint_emptyLibrary": "Выберите объект на холсте, чтобы добавить его сюда, или установите библиотеку из публичного репозитория ниже.",
     "hint_emptyPrivateLibrary": "Выберите объект на холсте, чтобы добавить его сюда."
+  },
+  "search": {
+    "title": "Найти на полотне",
+    "noMatch": "Совпадений не найдено...",
+    "singleResult": "результат",
+    "multipleResults": "результаты",
+    "placeholder": "Найти на полотне текст..."
   },
   "buttons": {
     "clearReset": "Очистить холст и сбросить цвет фона",
@@ -248,14 +258,15 @@
     "penMode": "Режим пера - предотвращение касания",
     "link": "Добавить/обновить ссылку для выбранной фигуры",
     "eraser": "Ластик",
-    "frame": "",
-    "magicframe": "",
-    "embeddable": "",
+    "frame": "Инструмент \"Рамка\"",
+    "magicframe": "Из wireframe в код",
+    "embeddable": "Веб-встраивание",
     "laser": "Лазерная указка",
     "hand": "Рука (перемещение холста)",
-    "extraTools": "",
+    "extraTools": "Больше инструментов",
     "mermaidToExcalidraw": "Из Mermaid в Excalidraw",
-    "magicSettings": "Параметры AI"
+    "magicSettings": "Параметры AI",
+    "generate": "Сгенерировать"
   },
   "headings": {
     "canvasActions": "Операции холста",
@@ -427,6 +438,7 @@
     "scene": "Сцены",
     "selected": "Выбран",
     "storage": "Хранилище",
+    "fullTitle": "Свойства полотна и фигур",
     "title": "Статистика для ботаников",
     "total": "Всего",
     "version": "Версия",
@@ -521,5 +533,35 @@
     "description": "",
     "syntax": "Синтаксис Mermaid",
     "preview": "Предпросмотр"
+  },
+  "commandPalette": {
+    "title": "Палитра команд",
+    "shortcuts": {
+      "select": "Выбрать",
+      "confirm": "Подтвердить",
+      "close": "Закрыть"
+    },
+    "recents": "Недавно использованные",
+    "search": {
+      "placeholder": "Ищите меню, команды и исследуйте скрытые гемы",
+      "noMatch": "Команды не найдены..."
+    },
+    "itemNotAvailable": "Команда недоступна...",
+    "shortcutHint": "Для использования палитры команд используйте {{shortcut}}",
+    "categories": {
+      "app": "Приложение",
+      "export": "Экспортировать",
+      "tools": "Инструменты",
+      "editor": "Редактор",
+      "elements": "Элементы",
+      "links": "Ссылки"
+    }
+  },
+  "authorization": {
+    "signUp": "Зарегистрироваться",
+    "signIn": "Авторизоваться"
+  },
+  "visualDebug": {
+    "visualDebug": "Визуальная отладка"
   }
 }

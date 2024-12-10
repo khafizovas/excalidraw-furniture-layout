@@ -5,6 +5,7 @@ import { MainMenu } from "../../packages/excalidraw/index";
 import { isExcalidrawPlusSignedUser } from "../app_constants";
 import { LanguageList } from "../app-language/LanguageList";
 import { saveDebugState } from "./DebugCanvas";
+import { t } from "../../packages/excalidraw/i18n";
 
 export const AppMainMenu: React.FC<{
   onCollabDialogOpen: () => any;
@@ -39,7 +40,9 @@ export const AppMainMenu: React.FC<{
         }?utm_source=signin&utm_medium=app&utm_content=hamburger`}
         className="highlighted"
       >
-        {isExcalidrawPlusSignedUser ? "Sign in" : "Sign up"}
+        {isExcalidrawPlusSignedUser
+          ? t("authorization.signIn")
+          : t("authorization.signUp")}
       </MainMenu.ItemLink>
       {import.meta.env.DEV && (
         <MainMenu.Item
@@ -55,7 +58,7 @@ export const AppMainMenu: React.FC<{
             props?.refresh();
           }}
         >
-          Visual Debug
+          {t("visualDebug.visualDebug")}
         </MainMenu.Item>
       )}
       <MainMenu.Separator />

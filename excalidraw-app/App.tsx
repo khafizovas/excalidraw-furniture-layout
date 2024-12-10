@@ -759,7 +759,7 @@ const ExcalidrawWrapper = () => {
     },
   };
   const ExcalidrawPlusAppCommand = {
-    label: "Sign up",
+    label: t("authorization.signUp"),
     category: DEFAULT_CATEGORIES.links,
     predicate: true,
     icon: <div style={{ width: 14 }}>{ExcalLogo}</div>,
