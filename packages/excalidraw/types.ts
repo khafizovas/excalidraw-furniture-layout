@@ -212,6 +212,9 @@ export type InteractiveCanvasAppState = Readonly<
     croppingElementId: AppState["croppingElementId"];
     // Search matches
     searchMatches: AppState["searchMatches"];
+    // Display size in meters
+    gridSize?: AppState["gridSize"];
+    gridStep?: AppState["gridStep"];
   }
 >;
 

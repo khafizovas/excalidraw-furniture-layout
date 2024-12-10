@@ -379,27 +379,28 @@ const renderSelectionBorder = (
   context.restore();
 };
 
-// TODO: Округлять значения
-// TODO: Учитывать коэффициент масштабирования при вычислении размеров
-// TODO: Масштабировать надпись и отступ в соответствии с масштабом
 const renderSelectedRectangleSize = (
   context: CanvasRenderingContext2D,
   appState: InteractiveCanvasAppState,
   rectangle: ExcalidrawRectangleElement,
 ) => {
+  const { gridStep = 0, gridSize = 0 } = appState;
   const { width, height, x, y } = rectangle;
-  const widthStr = `${width}м`;
-  const heightStr = `${height}м`;
-  const offset = 15;
-  const fontSize = 10;
+
+  const metreSize = gridSize * gridStep;
+  const widthInMeters = Math.floor((10 * width) / metreSize) / 10;
+  const heightInMeters = Math.floor((10 * height) / metreSize) / 10;
+
+  const widthStr = `${widthInMeters}м`;
+  const heightStr = `${heightInMeters}м`;
+  const text = `${widthStr} x ${heightStr}`;
 
   context.fillStyle = rectangle.strokeColor;
-  context.font = String(fontSize);
+  context.font = "16px sans-serif";
   context.textAlign = "right";
   context.textBaseline = "top";
 
-  const text = `${widthStr} x ${heightStr}`;
-  context.fillText(text, x + width, y - offset);
+  context.fillText(text, x + width, y - gridSize);
 };
 
 const renderBindingHighlight = (
