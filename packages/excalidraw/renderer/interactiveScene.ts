@@ -387,9 +387,6 @@ const renderSelectedRectangleSize = (
   appState: InteractiveCanvasAppState,
   rectangle: ExcalidrawRectangleElement,
 ) => {
-  console.log("Debug", "renderSelectedRectangleSize", "appState", appState);
-  console.log("Debug", "renderSelectedRectangleSize", "rectangle", rectangle);
-
   const { width, height, x, y } = rectangle;
   const widthStr = `${width}м`;
   const heightStr = `${height}м`;

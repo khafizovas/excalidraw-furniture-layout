@@ -253,8 +253,131 @@ const _renderStaticScene = ({
     );
   }
 
-  // TODO: Добавить линейки масштаба
+  // TODO: Что не так с масштабированием?..
+  // Rulers
+  // Константы для линеек
+  const RULER_WIDTH = 20; // ширина линейки в пикселях
+  const RULER_COLOR = "#888888";
+  const MAJOR_TICK_LENGTH = 10; // длина основной линии
+  const MINOR_TICK_LENGTH = 5; // длина промежуточной линии
 
+  // Отрисовка линейки
+  const drawRuler = (
+    context: CanvasRenderingContext2D,
+    appState: StaticSceneRenderConfig["appState"],
+    height: number,
+    width: number,
+    isHorizontal = false,
+  ) => {
+    const { gridSize, gridStep, scrollX, scrollY, zoom } = appState;
+
+    const { canvasSize, rulerEndX, rulerEndY } = getRulerParams(
+      scrollX,
+      scrollY,
+      width,
+      height,
+      isHorizontal,
+    );
+
+    context.save();
+
+    context.fillStyle = "#f5f5f5";
+    context.strokeStyle = RULER_COLOR;
+    context.textAlign = "right";
+
+    context.fillRect(0, 0, rulerEndX, rulerEndY);
+
+    const majorTick = gridSize * gridStep * zoom.value;
+    const minorTick = majorTick / 10;
+    const displayedTicksCount = Math.floor(canvasSize / minorTick);
+
+    for (let tickVal = 0; tickVal < displayedTicksCount; tickVal += 1) {
+      const isMajorTick = tickVal % 10 === 0;
+
+      const tickPosition = tickVal * minorTick;
+      const tickLength = isMajorTick ? MAJOR_TICK_LENGTH : MINOR_TICK_LENGTH;
+
+      const labelText = (tickVal / 10).toString();
+
+      const {
+        tickStartX,
+        tickStartY,
+        tickEndX,
+        tickEndY,
+        labelPositionX,
+        labelPositionY,
+      } = getTickParams(tickPosition, tickLength, isHorizontal);
+
+      context.beginPath();
+      context.moveTo(tickStartX, tickStartY);
+      context.lineTo(tickEndX, tickEndY);
+      context.stroke();
+
+      context.fillStyle = RULER_COLOR;
+
+      if (isMajorTick && tickVal !== 0) {
+        context.fillText(labelText, labelPositionX, labelPositionY);
+      }
+    }
+    context.restore();
+  };
+
+  // Формирование параметров для отрисовки горизонтальной и вертикальной линейки
+  const getRulerParams = (
+    scrollX: number,
+    scrollY: number,
+    width: number,
+    height: number,
+    isHorizontal: boolean,
+  ) => {
+    if (isHorizontal) {
+      return {
+        scrollSize: scrollX,
+        canvasSize: width,
+        rulerEndX: width,
+        rulerEndY: RULER_WIDTH,
+      };
+    }
+
+    return {
+      scrollSize: scrollY,
+      canvasSize: height,
+      rulerEndX: RULER_WIDTH,
+      rulerEndY: height,
+    };
+  };
+
+  // Формирование параметров для отрисовки отметок линейки
+  const getTickParams = (
+    tickPosition: number,
+    tickLength: number,
+    isHorizontal: boolean,
+  ) => {
+    if (isHorizontal) {
+      return {
+        tickStartX: tickPosition,
+        tickStartY: 0,
+        tickEndX: tickPosition,
+        tickEndY: tickLength,
+        labelPositionX: tickPosition + 4,
+        labelPositionY: RULER_WIDTH - 2,
+      };
+    }
+
+    return {
+      tickStartX: 0,
+      tickStartY: tickPosition,
+      tickEndX: tickLength,
+      tickEndY: tickPosition,
+      labelPositionX: RULER_WIDTH - 2,
+      labelPositionY: tickPosition + 4,
+    };
+  };
+
+  drawRuler(context, appState, normalizedHeight, normalizedWidth);
+  drawRuler(context, appState, normalizedHeight, normalizedWidth, true);
+
+  // Groups
   const groupsToBeAddedToFrame = new Set<string>();
 
   visibleElements.forEach((element) => {
