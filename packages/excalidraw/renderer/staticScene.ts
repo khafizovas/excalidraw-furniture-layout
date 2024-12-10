@@ -253,13 +253,12 @@ const _renderStaticScene = ({
     );
   }
 
-  // TODO: Что не так с масштабированием?..
   // Rulers
   // Константы для линеек
-  const RULER_WIDTH = 20; // ширина линейки в пикселях
+  const RULER_WIDTH = 30; // ширина линейки в пикселях
   const RULER_COLOR = "#888888";
-  const MAJOR_TICK_LENGTH = 10; // длина основной линии
-  const MINOR_TICK_LENGTH = 5; // длина промежуточной линии
+  const MAJOR_TICK_LENGTH = 15; // длина основной линии
+  const MINOR_TICK_LENGTH = 10; // длина промежуточной линии
 
   // Отрисовка линейки
   const drawRuler = (
@@ -269,25 +268,25 @@ const _renderStaticScene = ({
     width: number,
     isHorizontal = false,
   ) => {
-    const { gridSize, gridStep, scrollX, scrollY, zoom } = appState;
+    const { gridSize, gridStep, zoom } = appState;
 
     const { canvasSize, rulerEndX, rulerEndY } = getRulerParams(
-      scrollX,
-      scrollY,
       width,
       height,
+      zoom.value,
       isHorizontal,
     );
 
     context.save();
 
     context.fillStyle = "#f5f5f5";
+    context.font = "14px sans-serif";
     context.strokeStyle = RULER_COLOR;
     context.textAlign = "right";
 
     context.fillRect(0, 0, rulerEndX, rulerEndY);
 
-    const majorTick = gridSize * gridStep * zoom.value;
+    const majorTick = gridSize * gridStep;
     const minorTick = majorTick / 10;
     const displayedTicksCount = Math.floor(canvasSize / minorTick);
 
@@ -324,26 +323,23 @@ const _renderStaticScene = ({
 
   // Формирование параметров для отрисовки горизонтальной и вертикальной линейки
   const getRulerParams = (
-    scrollX: number,
-    scrollY: number,
     width: number,
     height: number,
+    zoom: number,
     isHorizontal: boolean,
   ) => {
     if (isHorizontal) {
       return {
-        scrollSize: scrollX,
-        canvasSize: width,
-        rulerEndX: width,
+        canvasSize: width / zoom,
+        rulerEndX: width / zoom,
         rulerEndY: RULER_WIDTH,
       };
     }
 
     return {
-      scrollSize: scrollY,
-      canvasSize: height,
+      canvasSize: height / zoom,
       rulerEndX: RULER_WIDTH,
-      rulerEndY: height,
+      rulerEndY: height / zoom,
     };
   };
 
