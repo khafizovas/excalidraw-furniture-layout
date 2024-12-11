@@ -55,7 +55,7 @@ import { TTDDialog } from "./TTDDialog/TTDDialog";
 import { Stats } from "./Stats";
 import { actionToggleStats } from "../actions";
 import ElementLinkDialog from "./ElementLinkDialog";
-import RoomPlanButton from "./RoomPlanButton";
+import { RoomPlanButton } from "./RoomPlanButton";
 import { LicenceAgreement } from "./LicenceAgreement";
 
 import "./LayerUI.scss";
@@ -76,6 +76,7 @@ interface LayerUIProps {
   renderCustomStats?: ExcalidrawProps["renderCustomStats"];
   UIOptions: AppProps["UIOptions"];
   onExportImage: AppClassProperties["onExportImage"];
+  onImageAction: AppClassProperties["onImageAction"];
   renderWelcomeScreen: boolean;
   children?: React.ReactNode;
   app: AppClassProperties;
@@ -133,6 +134,7 @@ const LayerUI = ({
   renderCustomStats,
   UIOptions,
   onExportImage,
+  onImageAction,
   renderWelcomeScreen,
   children,
   app,
@@ -270,7 +272,7 @@ const LayerUI = ({
                             marginRight: 20,
                           }}
                         >
-                          <RoomPlanButton />
+                          <RoomPlanButton onClick={onImageAction} />
                         </Island>
                         <Island
                           padding={1}

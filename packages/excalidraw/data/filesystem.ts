@@ -98,5 +98,20 @@ export const fileSave = (
   );
 };
 
+export const getImageFileFromURL = async (url: string): Promise<File> => {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+
+    const fileName = url.split("/").pop() || "image.png";
+    const file = new File([blob], fileName, { type: blob.type });
+
+    return file;
+  } catch (error) {
+    console.error("Error fetching image:", error);
+    throw new Error("Error fetching image");
+  }
+};
+
 export type { FileSystemHandle };
 export { nativeFileSystemSupported };

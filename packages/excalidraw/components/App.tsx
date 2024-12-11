@@ -329,7 +329,7 @@ import {
 } from "../element/image";
 import throttle from "lodash.throttle";
 import type { FileSystemHandle } from "../data/filesystem";
-import { fileOpen } from "../data/filesystem";
+import { fileOpen, getImageFileFromURL } from "../data/filesystem";
 import {
   bindTextToShapeAfterDuplication,
   getApproxMinLineHeight,
@@ -1579,6 +1579,7 @@ class App extends React.Component<AppProps, AppState> {
                           }
                           UIOptions={this.props.UIOptions}
                           onExportImage={this.onExportImage}
+                          onImageAction={this.onImageAction}
                           renderWelcomeScreen={
                             !this.state.isLoading &&
                             this.state.showWelcomeScreen &&
@@ -9646,10 +9647,12 @@ class App extends React.Component<AppProps, AppState> {
     }
   };
 
-  private onImageAction = async ({
+  onImageAction = async ({
     insertOnCanvasDirectly,
+    imageUrl,
   }: {
     insertOnCanvasDirectly: boolean;
+    imageUrl?: string;
   }) => {
     try {
       const clientX = this.state.width / 2 + this.state.offsetLeft;
@@ -9660,12 +9663,14 @@ class App extends React.Component<AppProps, AppState> {
         this.state,
       );
 
-      const imageFile = await fileOpen({
-        description: "Image",
-        extensions: Object.keys(
-          IMAGE_MIME_TYPES,
-        ) as (keyof typeof IMAGE_MIME_TYPES)[],
-      });
+      const imageFile = imageUrl
+        ? await getImageFileFromURL(imageUrl)
+        : await fileOpen({
+            description: "Image",
+            extensions: Object.keys(
+              IMAGE_MIME_TYPES,
+            ) as (keyof typeof IMAGE_MIME_TYPES)[],
+          });
 
       const imageElement = this.createImageElement({
         sceneX: x,
