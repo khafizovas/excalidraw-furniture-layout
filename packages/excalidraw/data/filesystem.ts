@@ -4,7 +4,7 @@ import {
   fileSave as _fileSave,
   supported as nativeFileSystemSupported,
 } from "browser-fs-access";
-import { EVENT, MIME_TYPES } from "../constants";
+import { EVENT, FILE_SAVE_URL, MIME_TYPES, SAVE_TO_SERVER } from "../constants";
 import { AbortError } from "../errors";
 import { debounce } from "../utils";
 
@@ -75,7 +75,7 @@ export const fileOpen = <M extends boolean | undefined = false>(opts: {
   }) as Promise<RetType>;
 };
 
-export const fileSave = (
+export const fileSave = async (
   blob: Blob | Promise<Blob>,
   opts: {
     /** supply without the extension */
@@ -87,6 +87,31 @@ export const fileSave = (
     fileHandle?: FileSystemHandle | null;
   },
 ) => {
+  if (SAVE_TO_SERVER) {
+    try {
+      const resolvedBlob = await Promise.resolve(blob);
+
+      const formData = new FormData();
+      formData.append("file", resolvedBlob, `${opts.name}.${opts.extension}`);
+      formData.append("description", opts.description);
+
+      const response = await fetch(FILE_SAVE_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (e) {
+      console.error("Error saving file:", e);
+      throw e;
+    }
+  }
+
   return _fileSave(
     blob,
     {

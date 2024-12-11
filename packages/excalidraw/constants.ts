@@ -453,4 +453,11 @@ export const ARROW_TYPE: { [T in AppState["currentItemArrowType"]]: T } = {
 export const DEFAULT_REDUCED_GLOBAL_ALPHA = 0.3;
 export const ELEMENT_LINK_KEY = "element";
 
+// Name of window field with room plan image url
 export const ROOM_PLAN_IMAGE_URL_KEY = "ROOM_PLAN_IMAGE";
+
+// Api entrypoint to save project file
+export const FILE_SAVE_URL = "/api/save-file";
+
+// Whether to save file locally or to send request
+export const SAVE_TO_SERVER = true;
