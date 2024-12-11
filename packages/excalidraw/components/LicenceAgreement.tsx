@@ -7,39 +7,26 @@ interface LicenceAgreementProps {
 
 interface LicenceAgreementModalProps {
   year: number;
-  author: string;
 }
 
 export const LicenceAgreement = (props: LicenceAgreementProps) => {
   const { onCloseRequest } = props;
 
   const currentYear = new Date().getFullYear();
-  let author = "";
-
-  try {
-    const data = localStorage.getItem("excalidraw-collab");
-    if (data) {
-      author = JSON.parse(data).username;
-    }
-  } catch (error: any) {
-    console.error(error);
-  }
 
   return (
     <Dialog onCloseRequest={onCloseRequest} title={false} size="wide">
-      <LicenceAgreementModal year={currentYear} author={author} />
+      <LicenceAgreementModal year={currentYear} />
     </Dialog>
   );
 };
 
 const LicenceAgreementModal = (props: LicenceAgreementModalProps) => {
-  const { year, author } = props;
+  const { year } = props;
 
   return (
     <div className="LicenceAgreementModal">
-      <div>
-        Copyright {year} {author}
-      </div>
+      <div>Copyright {year} Excalidraw.com</div>
       <div>
         Разрешается бесплатно использовать данный программный продукт и
         связанное с ним программное обеспечение без ограничений, включая без
