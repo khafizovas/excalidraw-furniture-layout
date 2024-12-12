@@ -5,7 +5,12 @@ import { clearElementsForExport } from "../element";
 import type { ExcalidrawElement, FileId } from "../element/types";
 import { CanvasError, ImageSceneDataError } from "../errors";
 import { calculateScrollCenter } from "../scene";
-import type { AppState, DataURL, LibraryItem } from "../types";
+import type {
+  AppState,
+  DataURL,
+  ExcalidrawImperativeAPI,
+  LibraryItem,
+} from "../types";
 import type { ValueOf } from "../utility-types";
 import { bytesToHexString, isPromiseLike } from "../utils";
 import { base64ToString, stringToBase64, toByteString } from "./encode";
@@ -194,20 +199,31 @@ export const loadFromBlob = async (
 export const parseLibraryJSON = (
   json: string,
   defaultStatus: LibraryItem["status"] = "unpublished",
+  addFiles?: ExcalidrawImperativeAPI["addFiles"],
 ) => {
   const data: ImportedLibraryData | undefined = JSON.parse(json);
   if (!isValidLibrary(data)) {
     throw new Error("Invalid library");
   }
   const libraryItems = data.libraryItems || data.library;
+  const libraryFiles = data.files;
+
+  if (libraryFiles && addFiles) {
+    addFiles(libraryFiles);
+  }
   return restoreLibraryItems(libraryItems, defaultStatus);
 };
 
 export const loadLibraryFromBlob = async (
   blob: Blob,
   defaultStatus: LibraryItem["status"] = "unpublished",
+  addFiles?: ExcalidrawImperativeAPI["addFiles"],
 ) => {
-  return parseLibraryJSON(await parseFileContents(blob), defaultStatus);
+  return parseLibraryJSON(
+    await parseFileContents(blob),
+    defaultStatus,
+    addFiles,
+  );
 };
 
 export const canvasToBlob = async (

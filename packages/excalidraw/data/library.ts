@@ -287,7 +287,11 @@ class Library {
           let nextItems;
 
           if (source instanceof Blob) {
-            nextItems = await loadLibraryFromBlob(source, defaultStatus);
+            nextItems = await loadLibraryFromBlob(
+              source,
+              defaultStatus,
+              this.app.addFiles,
+            );
           } else {
             nextItems = restoreLibraryItems(source, defaultStatus);
           }

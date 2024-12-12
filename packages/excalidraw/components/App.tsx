@@ -10030,7 +10030,11 @@ class App extends React.Component<AppProps, AppState> {
     const libraryJSON = event.dataTransfer.getData(MIME_TYPES.excalidrawlib);
     if (libraryJSON && typeof libraryJSON === "string") {
       try {
-        const libraryItems = parseLibraryJSON(libraryJSON);
+        const libraryItems = parseLibraryJSON(
+          libraryJSON,
+          "unpublished",
+          this.addFiles,
+        );
         this.addElementsFromPasteOrLibrary({
           elements: distributeLibraryItemsOnSquareGrid(libraryItems),
           position: event,
