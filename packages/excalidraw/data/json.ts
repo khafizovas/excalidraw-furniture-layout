@@ -136,10 +136,12 @@ export const serializeLibraryAsJSON = (
   files?: BinaryFiles,
 ) => {
   const itemsFileIds = new Set();
-  libraryItems[0].elements.forEach((item) => {
-    if (item && "fileId" in item) {
-      itemsFileIds.add(item.fileId);
-    }
+  libraryItems.forEach((libraryItem) => {
+    libraryItem.elements.forEach((item) => {
+      if (item && "fileId" in item) {
+        itemsFileIds.add(item.fileId);
+      }
+    });
   });
 
   const preparedFiles = files
