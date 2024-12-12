@@ -1,10 +1,5 @@
-import { atom } from "jotai";
 import type { BinaryFiles, LibraryItem } from "../types";
 import { useEffect, useState } from "react";
-
-export type ImgCache = Map<LibraryItem["id"], HTMLImageElement>;
-
-export const libraryItemImgssCache = atom<ImgCache>(new Map());
 
 const exportLibraryItemToImg = (
   elements: LibraryItem["elements"],
@@ -38,7 +33,6 @@ const exportLibraryItemToImg = (
 export const useLibraryItemImg = (
   id: LibraryItem["id"] | null,
   elements: LibraryItem["elements"] | undefined,
-  imgCache: ImgCache,
   files?: BinaryFiles,
 ): HTMLImageElement | undefined => {
   const [img, setImg] = useState<HTMLImageElement>();
@@ -46,27 +40,19 @@ export const useLibraryItemImg = (
   useEffect(() => {
     if (elements) {
       if (id) {
-        // Try to load cached img
-        const cachedImg = imgCache.get(id);
+        const exportedImg = exportLibraryItemToImg(elements, files);
 
-        if (cachedImg) {
-          setImg(cachedImg);
-        } else {
-          // When there is no img in cache export it and save to cache
-          const exportedImg = exportLibraryItemToImg(elements, files);
-
-          if (exportedImg) {
-            imgCache.set(id, exportedImg);
-            setImg(exportedImg);
-          }
+        if (exportedImg) {
+          setImg(exportedImg);
         }
+        // }
       } else {
         // When we have no id (usualy selected items from canvas) just export the img
         const exportedImg = exportLibraryItemToImg(elements, files);
         setImg(exportedImg);
       }
     }
-  }, [id, elements, imgCache, setImg, files]);
+  }, [id, elements, setImg, files]);
 
   return img;
 };

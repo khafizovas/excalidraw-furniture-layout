@@ -4,7 +4,6 @@ import { EmptyLibraryUnit, LibraryUnit } from "./LibraryUnit";
 import type { BinaryFiles, LibraryItem } from "../types";
 import type { ExcalidrawElement, NonDeleted } from "../element/types";
 import type { SvgCache } from "../hooks/useLibraryItemSvg";
-import type { ImgCache } from "../hooks/useLibraryItemImg";
 import { useTransition } from "../hooks/useTransition";
 
 type LibraryOrPendingItem = (
@@ -22,7 +21,6 @@ interface Props {
   onItemDrag: (id: LibraryItem["id"], event: React.DragEvent) => void;
   isItemSelected: (id: LibraryItem["id"] | null) => boolean;
   svgCache: SvgCache;
-  imgCache: ImgCache;
   itemsRenderedPerBatch: number;
   files?: BinaryFiles;
 }
@@ -43,7 +41,6 @@ export const LibraryMenuSection = memo(
     isItemSelected,
     onClick,
     svgCache,
-    imgCache,
     itemsRenderedPerBatch,
     files,
   }: Props) => {
@@ -67,7 +64,6 @@ export const LibraryMenuSection = memo(
               isPending={!item?.id && !!item?.elements}
               onClick={onClick}
               svgCache={svgCache}
-              imgCache={imgCache}
               id={item?.id}
               selected={isItemSelected(item.id)}
               onToggle={onItemSelectToggle}

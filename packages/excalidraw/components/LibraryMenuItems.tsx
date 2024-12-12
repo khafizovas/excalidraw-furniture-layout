@@ -72,7 +72,7 @@ export default function LibraryMenuItems({
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const { svgCache, imgCache } = useLibraryCache();
+  const { svgCache } = useLibraryCache();
   const unpublishedItems = useMemo(
     () => libraryItems.filter((item) => item.status !== "published"),
     [libraryItems],
@@ -202,7 +202,7 @@ export default function LibraryMenuItems({
   );
 
   const itemsRenderedPerBatch =
-    svgCache.size + imgCache.size >= libraryItems.length
+    svgCache.size >= libraryItems.length
       ? CACHED_ITEMS_RENDERED_PER_BATCH
       : ITEMS_RENDERED_PER_BATCH;
 
@@ -275,7 +275,6 @@ export default function LibraryMenuItems({
                   onClick={onAddToLibraryClick}
                   isItemSelected={isItemSelected}
                   svgCache={svgCache}
-                  imgCache={imgCache}
                   files={files}
                 />
               )}
@@ -287,7 +286,6 @@ export default function LibraryMenuItems({
                 onClick={onItemClick}
                 isItemSelected={isItemSelected}
                 svgCache={svgCache}
-                imgCache={imgCache}
                 files={files}
               />
             </LibraryMenuSectionGrid>
@@ -312,7 +310,6 @@ export default function LibraryMenuItems({
                 onClick={onItemClick}
                 isItemSelected={isItemSelected}
                 svgCache={svgCache}
-                imgCache={imgCache}
                 files={files}
               />
             </LibraryMenuSectionGrid>
