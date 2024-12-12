@@ -11,6 +11,7 @@ import type {
   LibraryItem,
   ExcalidrawProps,
   UIAppState,
+  BinaryFiles,
 } from "../types";
 import LibraryMenuItems from "./LibraryMenuItems";
 import { trackEvent } from "../analytics";
@@ -49,6 +50,7 @@ export const LibraryMenuContent = ({
   theme,
   selectedItems,
   onSelectItems,
+  files,
 }: {
   pendingElements: LibraryItem["elements"];
   onInsertLibraryItems: (libraryItems: LibraryItems) => void;
@@ -60,6 +62,7 @@ export const LibraryMenuContent = ({
   theme: UIAppState["theme"];
   selectedItems: LibraryItem["id"][];
   onSelectItems: (id: LibraryItem["id"][]) => void;
+  files?: BinaryFiles;
 }) => {
   const [libraryItemsData] = useAtom(libraryItemsAtom, jotaiScope);
 
@@ -133,6 +136,7 @@ export const LibraryMenuContent = ({
         theme={theme}
         onSelectItems={onSelectItems}
         selectedItems={selectedItems}
+        files={files}
       />
       {showBtn && (
         <LibraryMenuControlButtons
@@ -178,7 +182,7 @@ const usePendingElementsMemo = (
  * This component is meant to be rendered inside <Sidebar.Tab/> inside our
  * <DefaultSidebar/> or host apps Sidebar components.
  */
-export const LibraryMenu = () => {
+export const LibraryMenu = ({ files }: { files?: BinaryFiles }) => {
   const { library, id, onInsertElements } = useApp();
   const appProps = useAppProps();
   const appState = useUIAppState();
@@ -216,6 +220,7 @@ export const LibraryMenu = () => {
       theme={appState.theme}
       selectedItems={selectedItems}
       onSelectItems={setSelectedItems}
+      files={files}
     />
   );
 };

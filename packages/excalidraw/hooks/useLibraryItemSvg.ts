@@ -4,6 +4,7 @@ import { COLOR_PALETTE } from "../colors";
 import { jotaiScope } from "../jotai";
 import { exportToSvg } from "../../utils/export";
 import type { LibraryItem } from "../types";
+import { libraryItemImgssCache } from "./useLibraryItemImg";
 
 export type SvgCache = Map<LibraryItem["id"], SVGSVGElement>;
 
@@ -31,6 +32,10 @@ export const useLibraryItemSvg = (
 
   useEffect(() => {
     if (elements) {
+      if (elements[0].type === "image") {
+        return;
+      }
+
       if (id) {
         // Try to load cached svg
         const cachedSvg = svgCache.get(id);
@@ -65,16 +70,24 @@ export const useLibraryItemSvg = (
 
 export const useLibraryCache = () => {
   const [svgCache] = useAtom(libraryItemSvgsCache, jotaiScope);
+  const [imgCache] = useAtom(libraryItemImgssCache, jotaiScope);
 
-  const clearLibraryCache = () => svgCache.clear();
+  const clearLibraryCache = () => {
+    svgCache.clear();
+    imgCache.clear();
+  };
 
   const deleteItemsFromLibraryCache = (items: LibraryItem["id"][]) => {
-    items.forEach((item) => svgCache.delete(item));
+    items.forEach((item) => {
+      svgCache.delete(item);
+      imgCache.delete(item);
+    });
   };
 
   return {
     clearLibraryCache,
     deleteItemsFromLibraryCache,
     svgCache,
+    imgCache,
   };
 };

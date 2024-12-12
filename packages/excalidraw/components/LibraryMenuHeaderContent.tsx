@@ -2,7 +2,12 @@ import { useCallback, useState } from "react";
 import { t } from "../i18n";
 import Trans from "./Trans";
 import { jotaiScope } from "../jotai";
-import type { LibraryItem, LibraryItems, UIAppState } from "../types";
+import type {
+  BinaryFiles,
+  LibraryItem,
+  LibraryItems,
+  UIAppState,
+} from "../types";
 import { useApp, useExcalidrawSetAppState } from "./App";
 import { saveLibraryAsJSON } from "../data/json";
 import type Library from "../data/library";
@@ -40,6 +45,7 @@ export const LibraryDropdownMenuButton: React.FC<{
   resetLibrary: () => void;
   onSelectItems: (items: LibraryItem["id"][]) => void;
   appState: UIAppState;
+  files?: BinaryFiles;
   className?: string;
 }> = ({
   setAppState,
@@ -49,6 +55,7 @@ export const LibraryDropdownMenuButton: React.FC<{
   resetLibrary,
   onSelectItems,
   appState,
+  files,
   className,
 }) => {
   const [libraryItemsData] = useAtom(libraryItemsAtom, jotaiScope);
@@ -161,8 +168,8 @@ export const LibraryDropdownMenuButton: React.FC<{
           // ToDo: Be over-permissive until https://bugs.webkit.org/show_bug.cgi?id=34442
           // gets resolved. Else, iOS users cannot open `.excalidraw` files.
           /*
-            extensions: [".json", ".excalidrawlib"],
-            */
+          extensions: [".json", ".excalidrawlib"],
+          */
         }),
         merge: true,
         openLibraryMenu: true,
@@ -180,7 +187,7 @@ export const LibraryDropdownMenuButton: React.FC<{
     const libraryItems = itemsSelected
       ? items
       : await library.getLatestLibrary();
-    saveLibraryAsJSON(libraryItems)
+    saveLibraryAsJSON(libraryItems, files)
       .catch(muteFSAbortError)
       .catch((error) => {
         setAppState({ errorMessage: error.message });
@@ -275,10 +282,12 @@ export const LibraryDropdownMenuButton: React.FC<{
 export const LibraryDropdownMenu = ({
   selectedItems,
   onSelectItems,
+  files,
   className,
 }: {
   selectedItems: LibraryItem["id"][];
   onSelectItems: (id: LibraryItem["id"][]) => void;
+  files?: BinaryFiles;
   className?: string;
 }) => {
   const { library } = useApp();
@@ -317,6 +326,7 @@ export const LibraryDropdownMenu = ({
         removeFromLibrary(libraryItemsData.libraryItems)
       }
       resetLibrary={resetLibrary}
+      files={files}
       className={className}
     />
   );

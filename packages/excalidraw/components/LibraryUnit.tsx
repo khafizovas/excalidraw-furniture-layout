@@ -1,12 +1,14 @@
 import clsx from "clsx";
 import { memo, useEffect, useRef, useState } from "react";
 import { useDevice } from "./App";
-import type { LibraryItem } from "../types";
+import type { BinaryFiles, LibraryItem } from "../types";
 import "./LibraryUnit.scss";
 import { CheckboxItem } from "./CheckboxItem";
 import { PlusIcon } from "./icons";
 import type { SvgCache } from "../hooks/useLibraryItemSvg";
 import { useLibraryItemSvg } from "../hooks/useLibraryItemSvg";
+import type { ImgCache } from "../hooks/useLibraryItemImg";
+import { useLibraryItemImg } from "../hooks/useLibraryItemImg";
 
 export const LibraryUnit = memo(
   ({
@@ -18,6 +20,8 @@ export const LibraryUnit = memo(
     onToggle,
     onDrag,
     svgCache,
+    imgCache,
+    files,
   }: {
     id: LibraryItem["id"] | /** for pending item */ null;
     elements?: LibraryItem["elements"];
@@ -27,9 +31,12 @@ export const LibraryUnit = memo(
     onToggle: (id: string, event: React.MouseEvent) => void;
     onDrag: (id: string, event: React.DragEvent) => void;
     svgCache: SvgCache;
+    imgCache: ImgCache;
+    files?: BinaryFiles;
   }) => {
     const ref = useRef<HTMLDivElement | null>(null);
     const svg = useLibraryItemSvg(id, elements, svgCache);
+    const img = useLibraryItemImg(id, elements, imgCache, files);
 
     useEffect(() => {
       const node = ref.current;
@@ -42,10 +49,14 @@ export const LibraryUnit = memo(
         node.innerHTML = svg.outerHTML;
       }
 
+      if (img) {
+        node.innerHTML = img.outerHTML;
+      }
+
       return () => {
         node.innerHTML = "";
       };
-    }, [svg]);
+    }, [svg, img]);
 
     const [isHovered, setIsHovered] = useState(false);
     const isMobile = useDevice().editor.isMobile;

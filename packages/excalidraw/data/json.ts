@@ -131,18 +131,39 @@ export const isValidLibrary = (json: any): json is ImportedLibraryData => {
   );
 };
 
-export const serializeLibraryAsJSON = (libraryItems: LibraryItems) => {
+export const serializeLibraryAsJSON = (
+  libraryItems: LibraryItems,
+  files?: BinaryFiles,
+) => {
+  const itemsFileIds = new Set();
+  libraryItems[0].elements.forEach((item) => {
+    if (item && "fileId" in item) {
+      itemsFileIds.add(item.fileId);
+    }
+  });
+
+  const preparedFiles = files
+    ? Object.fromEntries(
+        Object.entries(files).filter(([id, file]) => itemsFileIds.has(id)),
+      )
+    : undefined;
+
   const data: ExportedLibraryData = {
     type: EXPORT_DATA_TYPES.excalidrawLibrary,
     version: VERSIONS.excalidrawLibrary,
     source: EXPORT_SOURCE,
     libraryItems,
+    files: preparedFiles,
   };
+
   return JSON.stringify(data, null, 2);
 };
 
-export const saveLibraryAsJSON = async (libraryItems: LibraryItems) => {
-  const serialized = serializeLibraryAsJSON(libraryItems);
+export const saveLibraryAsJSON = async (
+  libraryItems: LibraryItems,
+  files?: BinaryFiles,
+) => {
+  const serialized = serializeLibraryAsJSON(libraryItems, files);
   await fileSave(
     new Blob([serialized], {
       type: MIME_TYPES.excalidrawlib,

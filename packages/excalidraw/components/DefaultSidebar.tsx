@@ -16,6 +16,7 @@ import { Sidebar } from "./Sidebar/Sidebar";
 import "../components/dropdownMenu/DropdownMenu.scss";
 import { SearchMenu } from "./SearchMenu";
 import { LibraryIcon, searchIcon } from "./icons";
+import type { BinaryFiles } from "../types";
 
 const DefaultSidebarTrigger = withInternalFallback(
   "DefaultSidebarTrigger",
@@ -55,12 +56,14 @@ export const DefaultSidebar = Object.assign(
       className,
       onDock,
       docked,
+      files,
       ...rest
     }: Merge<
       MarkOptional<Omit<SidebarProps, "name">, "children">,
       {
         /** pass `false` to disable docking */
         onDock?: SidebarProps["onDock"] | false;
+        files?: BinaryFiles;
       }
     >) => {
       const appState = useUIAppState();
@@ -103,7 +106,7 @@ export const DefaultSidebar = Object.assign(
               </Sidebar.TabTriggers>
             </Sidebar.Header>
             <Sidebar.Tab tab={LIBRARY_SIDEBAR_TAB}>
-              <LibraryMenu />
+              <LibraryMenu files={files} />
             </Sidebar.Tab>
             <Sidebar.Tab tab={CANVAS_SEARCH_TAB}>
               <SearchMenu />

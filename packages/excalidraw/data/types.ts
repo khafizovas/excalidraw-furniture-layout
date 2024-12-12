@@ -51,6 +51,7 @@ export interface ExportedLibraryData {
   version: typeof VERSIONS.excalidrawLibrary;
   source: string;
   libraryItems: LibraryItems;
+  files?: BinaryFiles;
 }
 
 export interface ImportedLibraryData extends Partial<ExportedLibraryData> {

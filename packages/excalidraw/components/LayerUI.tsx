@@ -368,6 +368,7 @@ const LayerUI = ({
             `(${device.editor.isMobile ? "mobile" : "desktop"})`,
           );
         }}
+        files={files}
       />
     );
   };

@@ -8,6 +8,7 @@ import React, {
 import { serializeLibraryAsJSON } from "../data/json";
 import { t } from "../i18n";
 import type {
+  BinaryFiles,
   ExcalidrawProps,
   LibraryItem,
   LibraryItems,
@@ -47,6 +48,7 @@ export default function LibraryMenuItems({
   libraryReturnUrl,
   onSelectItems,
   selectedItems,
+  files,
 }: {
   isLoading: boolean;
   libraryItems: LibraryItems;
@@ -58,6 +60,7 @@ export default function LibraryMenuItems({
   id: string;
   selectedItems: LibraryItem["id"][];
   onSelectItems: (id: LibraryItem["id"][]) => void;
+  files?: BinaryFiles;
 }) {
   const libraryContainerRef = useRef<HTMLDivElement>(null);
   const scrollPosition = useScrollPosition<HTMLDivElement>(libraryContainerRef);
@@ -69,7 +72,7 @@ export default function LibraryMenuItems({
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const { svgCache } = useLibraryCache();
+  const { svgCache, imgCache } = useLibraryCache();
   const unpublishedItems = useMemo(
     () => libraryItems.filter((item) => item.status !== "published"),
     [libraryItems],
@@ -168,10 +171,10 @@ export default function LibraryMenuItems({
     (id: LibraryItem["id"], event: React.DragEvent) => {
       event.dataTransfer.setData(
         MIME_TYPES.excalidrawlib,
-        serializeLibraryAsJSON(getInsertedElements(id)),
+        serializeLibraryAsJSON(getInsertedElements(id), files),
       );
     },
-    [getInsertedElements],
+    [files, getInsertedElements],
   );
 
   const isItemSelected = useCallback(
@@ -199,7 +202,7 @@ export default function LibraryMenuItems({
   );
 
   const itemsRenderedPerBatch =
-    svgCache.size >= libraryItems.length
+    svgCache.size + imgCache.size >= libraryItems.length
       ? CACHED_ITEMS_RENDERED_PER_BATCH
       : ITEMS_RENDERED_PER_BATCH;
 
@@ -218,6 +221,7 @@ export default function LibraryMenuItems({
         <LibraryDropdownMenu
           selectedItems={selectedItems}
           onSelectItems={onSelectItems}
+          files={files}
           className="library-menu-dropdown-container--in-heading"
         />
       )}
@@ -271,6 +275,8 @@ export default function LibraryMenuItems({
                   onClick={onAddToLibraryClick}
                   isItemSelected={isItemSelected}
                   svgCache={svgCache}
+                  imgCache={imgCache}
+                  files={files}
                 />
               )}
               <LibraryMenuSection
@@ -281,6 +287,8 @@ export default function LibraryMenuItems({
                 onClick={onItemClick}
                 isItemSelected={isItemSelected}
                 svgCache={svgCache}
+                imgCache={imgCache}
+                files={files}
               />
             </LibraryMenuSectionGrid>
           )}
@@ -304,6 +312,8 @@ export default function LibraryMenuItems({
                 onClick={onItemClick}
                 isItemSelected={isItemSelected}
                 svgCache={svgCache}
+                imgCache={imgCache}
+                files={files}
               />
             </LibraryMenuSectionGrid>
           ) : unpublishedItems.length > 0 ? (
@@ -333,6 +343,7 @@ export default function LibraryMenuItems({
             <LibraryDropdownMenu
               selectedItems={selectedItems}
               onSelectItems={onSelectItems}
+              files={files}
             />
           </LibraryMenuControlButtons>
         )}

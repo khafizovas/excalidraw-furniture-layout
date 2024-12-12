@@ -405,7 +405,6 @@ export const DEFAULT_SIDEBAR = {
 export const LIBRARY_DISABLED_TYPES = new Set([
   "iframe",
   "embeddable",
-  "image",
 ] as const);
 
 // use these constants to easily identify reference sites
@@ -460,4 +459,4 @@ export const ROOM_PLAN_IMAGE_URL_KEY = "ROOM_PLAN_IMAGE";
 export const FILE_SAVE_URL = "/api/save-file";
 
 // Whether to save file locally or to send request
-export const SAVE_TO_SERVER = true;
+export const SAVE_TO_SERVER = false;
