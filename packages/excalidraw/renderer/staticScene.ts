@@ -370,8 +370,10 @@ const _renderStaticScene = ({
     };
   };
 
-  drawRuler(context, appState, normalizedHeight, normalizedWidth);
-  drawRuler(context, appState, normalizedHeight, normalizedWidth, true);
+  if (!renderConfig.isExporting) {
+    drawRuler(context, appState, normalizedHeight, normalizedWidth);
+    drawRuler(context, appState, normalizedHeight, normalizedWidth, true);
+  }
 
   // Groups
   const groupsToBeAddedToFrame = new Set<string>();
