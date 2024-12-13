@@ -33,6 +33,7 @@
     "i18next-browser-languagedetector": "6.1.4",
     "idb-keyval": "6.0.3",
     "jotai": "1.13.1",
+    "push-dir": "0.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "socket.io-client": "4.7.2",
@@ -48,7 +49,9 @@
     "start": "yarn && vite",
     "start:production": "yarn build && yarn serve",
     "serve": "npx http-server build -a localhost -p 5001 -o",
-    "build:preview": "yarn build && vite preview --port 5000"
+    "build:preview": "yarn build && vite preview --port 5000",
+    "push:gh-pages": "push-dir --dir=build --branch=gh-pages",
+    "deploy": "yarn build && yarn push:gh-pages"
   },
   "devDependencies": {
     "vite-plugin-sitemap": "0.7.1"
