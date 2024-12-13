@@ -107,13 +107,9 @@ import {
   DEFAULT_CATEGORIES,
 } from "../packages/excalidraw/components/CommandPalette/CommandPalette";
 import {
-  GithubIcon,
-  XBrandIcon,
-  DiscordIcon,
   usersIcon,
   exportToPlus,
   share,
-  youtubeIcon,
 } from "../packages/excalidraw/components/icons";
 import { appThemeAtom, useHandleAppTheme } from "./useHandleAppTheme";
 import { getPreferredLanguage } from "./app-language/language-detector";
