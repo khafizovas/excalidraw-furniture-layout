@@ -21,7 +21,7 @@ const CanvasGrid = ({
 }: PositionProps) => {
   return (
     <StatsDragInput
-      label="Grid step"
+      label="Шаг сетки"
       sensitivity={8}
       elements={[]}
       dragInputCallback={({

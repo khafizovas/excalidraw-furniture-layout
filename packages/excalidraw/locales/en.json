@@ -496,7 +496,8 @@
     "version": "Version",
     "versionCopy": "Click to copy",
     "versionNotAvailable": "Version not available",
-    "width": "Width"
+    "width": "Width",
+    "canvas": "Canvas"
   },
   "toast": {
     "addedToLibrary": "Added to library",

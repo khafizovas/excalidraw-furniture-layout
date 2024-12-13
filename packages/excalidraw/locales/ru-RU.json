@@ -269,6 +269,22 @@
     "magicSettings": "Параметры AI",
     "generate": "Сгенерировать"
   },
+  "element": {
+    "rectangle": "Прямоугольник",
+    "diamond": "Ромб",
+    "ellipse": "Эллипс",
+    "arrow": "Стрелка",
+    "line": "Линия",
+    "freedraw": "Чертить",
+    "text": "Текст",
+    "image": "Изображение",
+    "group": "Группа",
+    "frame": "Инструмент \"Рамка\"",
+    "magicframe": "Из wireframe в код",
+    "embeddable": "Веб-встраивание",
+    "selection": "Выделение области",
+    "iframe": "IFrame"
+  },
   "headings": {
     "canvasActions": "Операции холста",
     "selectedShapeActions": "Операции выбранной фигуры",
@@ -445,12 +461,16 @@
     "selected": "Выбран",
     "storage": "Хранилище",
     "fullTitle": "Свойства полотна и фигур",
-    "title": "Статистика для ботаников",
+    "title": "Статистика",
     "total": "Всего",
     "version": "Версия",
     "versionCopy": "Копировать",
     "versionNotAvailable": "Версия не доступна",
-    "width": "Ширина"
+    "width": "Ширина",
+    "shapes": "Фигуры",
+    "generalStats": "Основные",
+    "elementProperties": "Свойства фигур",
+    "canvas": "Полотно"
   },
   "toast": {
     "addedToLibrary": "Добавлено в библиотеку",
