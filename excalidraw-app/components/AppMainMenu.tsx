@@ -1,8 +1,7 @@
 import React from "react";
-import { loginIcon, eyeIcon } from "../../packages/excalidraw/components/icons";
+import { eyeIcon } from "../../packages/excalidraw/components/icons";
 import type { Theme } from "../../packages/excalidraw/element/types";
 import { MainMenu } from "../../packages/excalidraw/index";
-import { isExcalidrawPlusSignedUser } from "../app_constants";
 import { LanguageList } from "../app-language/LanguageList";
 import { saveDebugState } from "./DebugCanvas";
 import { t } from "../../packages/excalidraw/i18n";
@@ -33,17 +32,6 @@ export const AppMainMenu: React.FC<{
       <MainMenu.DefaultItems.ClearCanvas />
       <MainMenu.Separator />
       <MainMenu.DefaultItems.LicenceAgreement />
-      <MainMenu.ItemLink
-        icon={loginIcon}
-        href={`${import.meta.env.VITE_APP_PLUS_APP}${
-          isExcalidrawPlusSignedUser ? "" : "/sign-up"
-        }?utm_source=signin&utm_medium=app&utm_content=hamburger`}
-        className="highlighted"
-      >
-        {isExcalidrawPlusSignedUser
-          ? t("authorization.signIn")
-          : t("authorization.signUp")}
-      </MainMenu.ItemLink>
       {import.meta.env.DEV && (
         <MainMenu.Item
           icon={eyeIcon}
