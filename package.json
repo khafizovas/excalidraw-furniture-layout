@@ -81,6 +81,7 @@
     "rm:build": "rm -rf excalidraw-app/{build,dist,dev-dist} && rm -rf packages/*/{dist,build} && rm -rf examples/*/*/{build,dist}",
     "rm:node_modules": "rm -rf node_modules && rm -rf excalidraw-app/node_modules && rm -rf packages/*/node_modules",
     "clean-install": "yarn rm:node_modules && yarn install",
+    "push:gh-pages": "yarn --cwd ./excalidraw-app push:gh-pages",
     "deploy": "yarn --cwd ./excalidraw-app deploy"
   },
   "resolutions": {
