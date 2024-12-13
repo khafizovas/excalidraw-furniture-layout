@@ -115,10 +115,15 @@
           font-weight: 700;
           font-size: 1.125rem;
           line-height: 130%;
+          text-align: center;
 
           margin: 0;
 
           color: var(--text-primary-color);
+        }
+
+        .ExcButton__contents {
+          width: 100%;
         }
       }
     }
