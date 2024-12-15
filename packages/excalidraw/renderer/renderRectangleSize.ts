@@ -9,14 +9,14 @@ interface Coordinates2D {
   y: number;
 }
 
-type RectangleSelectedElement =
+type SelectedRectangleElement =
   | ExcalidrawRectangleElement
   | ExcalidrawEllipseElement;
 
 export const renderSelectedRectangleSize = (
   context: CanvasRenderingContext2D,
   appState: InteractiveCanvasAppState,
-  rectangle: RectangleSelectedElement,
+  rectangle: SelectedRectangleElement,
 ): void => {
   const { gridStep = 0, gridSize = 0 } = appState;
   const { strokeColor } = rectangle;
@@ -28,7 +28,7 @@ export const renderSelectedRectangleSize = (
 };
 
 const getRectangleSizeLabelCoord = (
-  rectangle: RectangleSelectedElement,
+  rectangle: SelectedRectangleElement,
   offset: number,
 ): Coordinates2D => {
   const center = getRectangleCenter(rectangle);
@@ -47,7 +47,7 @@ const getRectangleSizeLabelCoord = (
 };
 
 const getRectangleCenter = (
-  rectangle: RectangleSelectedElement,
+  rectangle: SelectedRectangleElement,
 ): Coordinates2D => {
   const { x, y, width, height } = rectangle;
 
@@ -58,7 +58,7 @@ const getRectangleCenter = (
 };
 
 const getRectangleSizeLabelCorner = (
-  rectangle: RectangleSelectedElement,
+  rectangle: SelectedRectangleElement,
   offset: number,
 ): Coordinates2D => {
   const { x, y, width, height, angle } = rectangle;
@@ -104,7 +104,7 @@ const getRotatedRectangleSizeLabelVector = (
 };
 
 const getRectangleSizeLabel = (
-  rectangle: RectangleSelectedElement,
+  rectangle: SelectedRectangleElement,
   gridSize: number,
   gridStep: number,
 ): string => {
