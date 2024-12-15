@@ -385,22 +385,140 @@ const renderSelectedRectangleSize = (
   rectangle: ExcalidrawRectangleElement,
 ) => {
   const { gridStep = 0, gridSize = 0 } = appState;
-  const { width, height, x, y } = rectangle;
+  const { strokeColor } = rectangle;
+
+  const labelPosition = getRectangleSizeLabelCoord(rectangle, gridSize);
+  const labelText = getRectangleSizeLabel(rectangle, gridSize, gridStep);
+
+  writeRectangleSizeToCanvas(context, labelText, labelPosition, strokeColor);
+};
+
+const getRectangleSizeLabelCoord = (
+  rectangle: ExcalidrawRectangleElement,
+  offset: number,
+) => {
+  const center = getRectangleCenter(rectangle);
+  const corner = getRectangleSizeLabelCorner(rectangle, offset);
+
+  const vector = getRectangleSizeLabelVector(center, corner);
+  const rotatedVector = getRotatedRectangleSizeLabelVector(
+    vector,
+    rectangle.angle,
+  );
+
+  return {
+    x: center.x + rotatedVector.x,
+    y: center.y + rotatedVector.y,
+  };
+};
+
+const getRectangleCenter = (rectangle: ExcalidrawRectangleElement) => {
+  const { x, y, width, height } = rectangle;
+
+  return {
+    x: x + width / 2,
+    y: y + height / 2,
+  };
+};
+
+const getRectangleSizeLabelCorner = (
+  rectangle: ExcalidrawRectangleElement,
+  offset: number,
+) => {
+  const { x, y, width, height, angle } = rectangle;
+
+  if (angle >= Math.PI / 4 && angle < (3 * Math.PI) / 4) {
+    return { x: x - offset, y: y - offset };
+  }
+
+  if (angle >= (3 * Math.PI) / 4 && angle < (5 * Math.PI) / 4) {
+    return { x: x - offset, y: y + height + offset };
+  }
+
+  if (angle >= (5 * Math.PI) / 4 && angle < (7 * Math.PI) / 4) {
+    return { x: x + width + offset, y: y + height + offset };
+  }
+
+  return { x: x + width + offset, y: y - offset };
+};
+
+const getRectangleSizeLabelVector = (
+  center: { x: number; y: number },
+  corner: { x: number; y: number },
+) => {
+  const { x: centerX, y: centerY } = center;
+  const { x: cornerX, y: cornerY } = corner;
+
+  return {
+    x: cornerX - centerX,
+    y: cornerY - centerY,
+  };
+};
+
+const getRotatedRectangleSizeLabelVector = (
+  vector: { x: number; y: number },
+  angle: number,
+) => {
+  const { x, y } = vector;
+
+  return {
+    x: Math.cos(angle) * x - Math.sin(angle) * y,
+    y: Math.sin(angle) * x + Math.cos(angle) * y,
+  };
+};
+
+const getRectangleSizeLabel = (
+  rectangle: ExcalidrawRectangleElement,
+  gridSize: number,
+  gridStep: number,
+) => {
+  const { width, height, angle } = rectangle;
+
+  const isUpsideDown =
+    (angle > Math.PI / 4 && angle < (3 * Math.PI) / 4) ||
+    (angle > (5 * Math.PI) / 4 && angle < (7 * Math.PI) / 4);
+
+  const rotatedWidth = isUpsideDown ? height : width;
+  const rotatedHeight = isUpsideDown ? width : height;
 
   const metreSize = gridSize * gridStep;
-  const widthInMeters = Math.floor((10 * width) / metreSize) / 10;
-  const heightInMeters = Math.floor((10 * height) / metreSize) / 10;
+
+  const widthInMeters = Math.floor((10 * rotatedWidth) / metreSize) / 10;
+  const heightInMeters = Math.floor((10 * rotatedHeight) / metreSize) / 10;
 
   const widthStr = `${widthInMeters}м`;
   const heightStr = `${heightInMeters}м`;
-  const text = `${widthStr} x ${heightStr}`;
 
-  context.fillStyle = rectangle.strokeColor;
+  return `${widthStr} x ${heightStr}`;
+};
+
+const writeRectangleSizeToCanvas = (
+  context: CanvasRenderingContext2D,
+  labelText: string,
+  labelPosition: { x: number; y: number },
+  strokeColor: string,
+) => {
+  const { x, y } = labelPosition;
+
+  context.fillStyle = strokeColor;
   context.font = "16px sans-serif";
-  context.textAlign = "right";
+  context.textAlign = "left";
   context.textBaseline = "top";
 
-  context.fillText(text, x + width, y - gridSize);
+  context.fillText(labelText, x, y);
+};
+
+const renderSelectedElementSize = (
+  context: CanvasRenderingContext2D,
+  appState: InteractiveCanvasAppState,
+  elenent: ExcalidrawElement,
+) => {
+  const { type } = elenent;
+
+  switch (type) {
+    case "rectangle":
+      renderSelectedRectangleSize(context, appState, elenent);
+  }
 };
 
 const renderBindingHighlight = (
@@ -1045,9 +1163,7 @@ const _renderInteractiveScene = ({
           selectedElement.angle,
         );
 
-        if (selectedElement.type === "rectangle") {
-          renderSelectedRectangleSize(context, appState, selectedElement);
-        }
+        renderSelectedElementSize(context, appState, selectedElement);
       }
 
       if (appState.croppingElementId && !appState.isCropping) {
