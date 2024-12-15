@@ -388,7 +388,9 @@ const renderSelectedElementSize = (
 
   switch (type) {
     case "rectangle":
+    case "ellipse":
       renderSelectedRectangleSize(context, appState, element);
+      break;
   }
 };
 
