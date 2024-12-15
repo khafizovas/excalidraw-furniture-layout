@@ -382,13 +382,13 @@ const renderSelectionBorder = (
 const renderSelectedElementSize = (
   context: CanvasRenderingContext2D,
   appState: InteractiveCanvasAppState,
-  elenent: ExcalidrawElement,
+  element: ExcalidrawElement,
 ) => {
-  const { type } = elenent;
+  const { type } = element;
 
   switch (type) {
     case "rectangle":
-      renderSelectedRectangleSize(context, appState, elenent);
+      renderSelectedRectangleSize(context, appState, element);
   }
 };
 
@@ -1007,6 +1007,10 @@ const _renderInteractiveScene = ({
     context.save();
     context.translate(appState.scrollX, appState.scrollY);
 
+    selectedElements.forEach((element) => {
+      renderSelectedElementSize(context, appState, element);
+    });
+
     if (selectedElements.length === 1) {
       const selectedElement = selectedElements[0];
 
@@ -1033,8 +1037,6 @@ const _renderInteractiveScene = ({
           transformHandles,
           selectedElement.angle,
         );
-
-        renderSelectedElementSize(context, appState, selectedElement);
       }
 
       if (appState.croppingElementId && !appState.isCropping) {
