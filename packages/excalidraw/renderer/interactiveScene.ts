@@ -386,10 +386,12 @@ const renderSelectedElementSize = (
   element: ExcalidrawElement,
 ) => {
   const { type } = element;
+  console.log("Debug", element);
 
   switch (type) {
     case "rectangle":
     case "ellipse":
+    case "image":
       renderSelectedRectangleSize(context, appState, element);
       break;
     case "line":

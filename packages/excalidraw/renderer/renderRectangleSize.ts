@@ -1,5 +1,6 @@
 import type {
   ExcalidrawEllipseElement,
+  ExcalidrawImageElement,
   ExcalidrawRectangleElement,
 } from "../element/types";
 import type { InteractiveCanvasAppState } from "../types";
@@ -11,7 +12,8 @@ interface Coordinates2D {
 
 type SelectedRectangleElement =
   | ExcalidrawRectangleElement
-  | ExcalidrawEllipseElement;
+  | ExcalidrawEllipseElement
+  | ExcalidrawImageElement;
 
 export const renderSelectedRectangleSize = (
   context: CanvasRenderingContext2D,
@@ -19,7 +21,9 @@ export const renderSelectedRectangleSize = (
   rectangle: SelectedRectangleElement,
 ): void => {
   const { gridStep = 0, gridSize = 0 } = appState;
-  const { strokeColor } = rectangle;
+
+  const strokeColor =
+    rectangle.type === "image" ? "#000" : rectangle.strokeColor;
 
   const labelPosition = getRectangleSizeLabelCoord(rectangle, gridSize);
   const labelText = getRectangleSizeLabelText(rectangle, gridSize, gridStep);
