@@ -22,7 +22,7 @@ export const renderSelectedRectangleSize = (
   const { strokeColor } = rectangle;
 
   const labelPosition = getRectangleSizeLabelCoord(rectangle, gridSize);
-  const labelText = getRectangleSizeLabel(rectangle, gridSize, gridStep);
+  const labelText = getRectangleSizeLabelText(rectangle, gridSize, gridStep);
 
   writeRectangleSizeToCanvas(context, labelText, labelPosition, strokeColor);
 };
@@ -103,7 +103,7 @@ const getRotatedRectangleSizeLabelVector = (
   };
 };
 
-const getRectangleSizeLabel = (
+const getRectangleSizeLabelText = (
   rectangle: SelectedRectangleElement,
   gridSize: number,
   gridStep: number,
