@@ -10,6 +10,15 @@ interface Coordinates2D {
   y: number;
 }
 
+export interface GroupSelectionRectangle {
+  type: "group";
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+  strokeColor: string;
+}
+
 type SelectedRectangleElement =
   | ExcalidrawRectangleElement
   | ExcalidrawEllipseElement
@@ -18,17 +27,51 @@ type SelectedRectangleElement =
 export const renderSelectedRectangleSize = (
   context: CanvasRenderingContext2D,
   appState: InteractiveCanvasAppState,
-  rectangle: SelectedRectangleElement,
+  rectangle: SelectedRectangleElement | GroupSelectionRectangle,
 ): void => {
   const { gridStep = 0, gridSize = 0 } = appState;
 
   const strokeColor =
     rectangle.type === "image" ? "#000" : rectangle.strokeColor;
 
-  const labelPosition = getRectangleSizeLabelCoord(rectangle, gridSize);
-  const labelText = getRectangleSizeLabelText(rectangle, gridSize, gridStep);
+  let labelPosition;
+  let labelText;
+
+  if (rectangle.type !== "group") {
+    labelPosition = getRectangleSizeLabelCoord(rectangle, gridSize);
+    labelText = getRectangleSizeLabelText(rectangle, gridSize, gridStep);
+  } else {
+    labelPosition = getGroupRectangleSizeLabelCoord(rectangle, gridSize);
+    labelText = getGroupRectangleSizeLabelText(rectangle, gridSize, gridStep);
+  }
 
   writeRectangleSizeToCanvas(context, labelText, labelPosition, strokeColor);
+};
+
+const getGroupRectangleSizeLabelCoord = (
+  rectangle: GroupSelectionRectangle,
+  offset: number,
+): Coordinates2D => {
+  return {
+    x: rectangle.x2 + offset,
+    y: rectangle.y1 - offset,
+  };
+};
+
+const getGroupRectangleSizeLabelText = (
+  rectangle: GroupSelectionRectangle,
+  gridSize: number,
+  gridStep: number,
+): string => {
+  const width = rectangle.x2 - rectangle.x1;
+  const height = rectangle.y2 - rectangle.y1;
+
+  const metreSize = gridSize * gridStep;
+
+  const widthInMeters = Math.floor((10 * width) / metreSize) / 10;
+  const heightInMeters = Math.floor((10 * height) / metreSize) / 10;
+
+  return `${widthInMeters}м x ${heightInMeters}м`;
 };
 
 const getRectangleSizeLabelCoord = (

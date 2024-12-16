@@ -76,6 +76,7 @@ import type {
 } from "../scene/types";
 import type { GlobalPoint, LocalPoint, Radians } from "../../math";
 import { getCornerRadius } from "../shapes";
+import type { GroupSelectionRectangle } from "./renderRectangleSize";
 import { renderSelectedRectangleSize } from "./renderRectangleSize";
 import { renderSelectedLineSize } from "./renderLineSize";
 
@@ -114,7 +115,7 @@ const highlightPoint = <Point extends LocalPoint | GlobalPoint>(
   context: CanvasRenderingContext2D,
   appState: InteractiveCanvasAppState,
 ) => {
-  context.fillStyle = "rgba(105, 101, 219, 0.4)";
+  context.fillStyle = "rgba(101, 219, 130, 0.4)";
 
   fillCircle(
     context,
@@ -188,9 +189,9 @@ const renderSingleLinearPoint = <Point extends GlobalPoint | LocalPoint>(
   context.setLineDash([]);
   context.fillStyle = "rgba(255, 255, 255, 0.9)";
   if (isSelected) {
-    context.fillStyle = "rgba(134, 131, 226, 0.9)";
+    context.fillStyle = "rgba(136, 226, 131, 0.9)";
   } else if (isPhantomPoint) {
-    context.fillStyle = "rgba(177, 151, 252, 0.7)";
+    context.fillStyle = "rgba(151, 252, 169, 0.7)";
   }
 
   fillCircle(
@@ -385,8 +386,10 @@ const renderSelectedElementSize = (
   appState: InteractiveCanvasAppState,
   element: ExcalidrawElement,
 ) => {
-  const { type } = element;
-  console.log("Debug", element);
+  const { type, groupIds } = element;
+  if (groupIds.length) {
+    return;
+  }
 
   switch (type) {
     case "rectangle":
@@ -468,7 +471,7 @@ const renderElementsBoxHighlight = (
       x2,
       y1,
       y2,
-      selectionColors: ["rgb(0,118,255)"],
+      selectionColors: ["rgb(51, 255, 0)"],
       dashed: false,
       cx: x1 + (x2 - x1) / 2,
       cy: y1 + (y2 - y1) / 2,
@@ -910,6 +913,7 @@ const _renderInteractiveScene = ({
       );
     }
     const selectionColor = renderConfig.selectionColor || oc.black;
+    const selectedGroups: GroupSelectionRectangle[] = [];
 
     if (showBoundingBox) {
       // Optimisation for finding quickly relevant element ids
@@ -996,6 +1000,15 @@ const _renderInteractiveScene = ({
           cy: y1 + (y2 - y1) / 2,
           activeEmbeddable: false,
         });
+
+        selectedGroups.push({
+          type: "group",
+          x1,
+          x2,
+          y1,
+          y2,
+          strokeColor: oc.black,
+        });
       };
 
       for (const groupId of getSelectedGroupIds(appState)) {
@@ -1017,6 +1030,10 @@ const _renderInteractiveScene = ({
 
     selectedElements.forEach((element) => {
       renderSelectedElementSize(context, appState, element);
+    });
+
+    selectedGroups.forEach((group) => {
+      renderSelectedRectangleSize(context, appState, group);
     });
 
     if (selectedElements.length === 1) {
