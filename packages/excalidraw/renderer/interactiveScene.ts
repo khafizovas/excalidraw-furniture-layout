@@ -77,6 +77,7 @@ import type {
 import type { GlobalPoint, LocalPoint, Radians } from "../../math";
 import { getCornerRadius } from "../shapes";
 import { renderSelectedRectangleSize } from "./renderRectangleSize";
+import { renderSelectedLineSize } from "./renderLineSize";
 
 const renderLinearElementPointHighlight = (
   context: CanvasRenderingContext2D,
@@ -391,6 +392,9 @@ const renderSelectedElementSize = (
     case "ellipse":
       renderSelectedRectangleSize(context, appState, element);
       break;
+    case "line":
+    case "arrow":
+      renderSelectedLineSize(context, appState, element);
   }
 };
 
