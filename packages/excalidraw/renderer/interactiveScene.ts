@@ -185,7 +185,7 @@ const renderSingleLinearPoint = <Point extends GlobalPoint | LocalPoint>(
   isSelected: boolean,
   isPhantomPoint = false,
 ) => {
-  context.strokeStyle = "#5e5ad8";
+  context.strokeStyle = "rgb(107, 216, 90)";
   context.setLineDash([]);
   context.fillStyle = "rgba(255, 255, 255, 0.9)";
   if (isSelected) {
@@ -430,7 +430,7 @@ const renderFrameHighlight = (
   const width = x2 - x1;
   const height = y2 - y1;
 
-  context.strokeStyle = "rgb(0,118,255)";
+  context.strokeStyle = "rgb(0, 255, 89)";
   context.lineWidth = FRAME_STYLE.strokeWidth / appState.zoom.value;
 
   context.save();
