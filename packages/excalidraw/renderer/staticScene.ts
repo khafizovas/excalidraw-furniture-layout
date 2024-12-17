@@ -54,10 +54,21 @@ const strokeGrid = (
   const offsetY = (scrollY % gridSize) - gridSize;
 
   const actualGridSize = gridSize * zoom.value;
-
   const spaceWidth = 1 / zoom.value;
 
+  const rulerWidth = 20; // Ширина линейки в пикселях
+  const textOffset = 4; // Отступ текста от линейки
+
   context.save();
+
+  // Смещение для четких линий
+  let translateX = 0;
+  let translateY = 0;
+  if (zoom.value === 1) {
+    translateX = offsetX % 1 ? 0 : 0.5;
+    translateY = offsetY % 1 ? 0 : 0.5;
+    context.translate(translateX, translateY);
+  }
 
   // Offset rendering by 0.5 to ensure that 1px wide lines are crisp.
   // We only do this when zoomed to 100% because otherwise the offset is
@@ -86,6 +97,26 @@ const strokeGrid = (
     context.moveTo(x, offsetY - gridSize);
     context.lineTo(x, Math.ceil(offsetY + height + gridSize * 2));
     context.stroke();
+
+    // --- Отрисовка вертикальной линейки ---
+    context.beginPath();
+    context.setLineDash([]);
+    context.strokeStyle = "black"; // Цвет меток
+    context.lineWidth = 1;
+    context.moveTo(x, 0); // Начало метки на линейке
+    context.lineTo(x, isBold ? rulerWidth : rulerWidth / 2); // Конец метки на линейке
+    context.stroke();
+
+    if (isBold) {
+      // Добавляем текст на вертикальной линейке
+      const text = Math.round((x - offsetX - scrollX) / (gridStep * gridSize));
+
+      context.fillText(
+        text.toString(),
+        x + textOffset,
+        rulerWidth - translateY - textOffset,
+      );
+    }
   }
 
   for (let y = offsetY; y < offsetY + height + gridSize * 2; y += gridSize) {
@@ -105,7 +136,34 @@ const strokeGrid = (
     context.moveTo(offsetX - gridSize, y);
     context.lineTo(Math.ceil(offsetX + width + gridSize * 2), y);
     context.stroke();
+
+    // --- Отрисовка горизонтальной линейки ---
+    context.beginPath();
+    context.setLineDash([]);
+    context.strokeStyle = "black"; // Цвет меток
+    context.lineWidth = 1;
+    context.moveTo(0, y); // Начало метки на линейке
+    context.lineTo(isBold ? rulerWidth : rulerWidth / 2, y); // Конец метки на линейке
+    context.stroke();
+
+    if (isBold) {
+      // Добавляем текст на горизонтальной линейке
+      const text = Math.round((y - offsetY - scrollY) / (gridStep * gridSize));
+
+      context.fillText(
+        text.toString(),
+        rulerWidth - translateX - textOffset,
+        y - textOffset,
+      );
+    }
   }
+
+  // --- Отрисовка основы линеек ---
+  context.beginPath();
+  context.fillStyle = "rgba(211, 211, 211, 0.5)"; // Цвет фона линейки
+  context.fillRect(-translateX, -translateY, rulerWidth, height + translateY); // Заливка фона вертикальной линейки
+  context.fillRect(-translateX, -translateY, width + translateX, rulerWidth); // Заливка фона горизонтальной линейки
+
   context.restore();
 };
 
@@ -251,128 +309,6 @@ const _renderStaticScene = ({
       normalizedWidth / appState.zoom.value,
       normalizedHeight / appState.zoom.value,
     );
-  }
-
-  // Rulers
-  // Константы для линеек
-  const RULER_WIDTH = 30; // ширина линейки в пикселях
-  const RULER_COLOR = "#888888";
-  const MAJOR_TICK_LENGTH = 15; // длина основной линии
-  const MINOR_TICK_LENGTH = 10; // длина промежуточной линии
-
-  // Отрисовка линейки
-  const drawRuler = (
-    context: CanvasRenderingContext2D,
-    appState: StaticSceneRenderConfig["appState"],
-    height: number,
-    width: number,
-    isHorizontal = false,
-  ) => {
-    const { gridSize, gridStep, zoom } = appState;
-
-    const { canvasSize, rulerEndX, rulerEndY } = getRulerParams(
-      width,
-      height,
-      zoom.value,
-      isHorizontal,
-    );
-
-    context.save();
-
-    context.fillStyle = "#f5f5f5";
-    context.font = "14px sans-serif";
-    context.strokeStyle = RULER_COLOR;
-    context.textAlign = "right";
-
-    context.fillRect(0, 0, rulerEndX, rulerEndY);
-
-    const majorTick = gridSize * gridStep;
-    const minorTick = majorTick / 10;
-    const displayedTicksCount = Math.floor(canvasSize / minorTick);
-
-    for (let tickVal = 0; tickVal < displayedTicksCount; tickVal += 1) {
-      const isMajorTick = tickVal % 10 === 0;
-
-      const tickPosition = tickVal * minorTick;
-      const tickLength = isMajorTick ? MAJOR_TICK_LENGTH : MINOR_TICK_LENGTH;
-
-      const labelText = (tickVal / 10).toString();
-
-      const {
-        tickStartX,
-        tickStartY,
-        tickEndX,
-        tickEndY,
-        labelPositionX,
-        labelPositionY,
-      } = getTickParams(tickPosition, tickLength, isHorizontal);
-
-      context.beginPath();
-      context.moveTo(tickStartX, tickStartY);
-      context.lineTo(tickEndX, tickEndY);
-      context.stroke();
-
-      context.fillStyle = RULER_COLOR;
-
-      if (isMajorTick && tickVal !== 0) {
-        context.fillText(labelText, labelPositionX, labelPositionY);
-      }
-    }
-    context.restore();
-  };
-
-  // Формирование параметров для отрисовки горизонтальной и вертикальной линейки
-  const getRulerParams = (
-    width: number,
-    height: number,
-    zoom: number,
-    isHorizontal: boolean,
-  ) => {
-    if (isHorizontal) {
-      return {
-        canvasSize: width / zoom,
-        rulerEndX: width / zoom,
-        rulerEndY: RULER_WIDTH,
-      };
-    }
-
-    return {
-      canvasSize: height / zoom,
-      rulerEndX: RULER_WIDTH,
-      rulerEndY: height / zoom,
-    };
-  };
-
-  // Формирование параметров для отрисовки отметок линейки
-  const getTickParams = (
-    tickPosition: number,
-    tickLength: number,
-    isHorizontal: boolean,
-  ) => {
-    if (isHorizontal) {
-      return {
-        tickStartX: tickPosition,
-        tickStartY: 0,
-        tickEndX: tickPosition,
-        tickEndY: tickLength,
-        labelPositionX: tickPosition + 4,
-        labelPositionY: RULER_WIDTH - 2,
-      };
-    }
-
-    return {
-      tickStartX: 0,
-      tickStartY: tickPosition,
-      tickEndX: tickLength,
-      tickEndY: tickPosition,
-      labelPositionX: RULER_WIDTH - 2,
-      labelPositionY: tickPosition + 4,
-    };
-  };
-
-  if (!renderConfig.isExporting) {
-    drawRuler(context, appState, normalizedHeight, normalizedWidth);
-    drawRuler(context, appState, normalizedHeight, normalizedWidth, true);
   }
 
   // Groups
