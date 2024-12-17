@@ -49,6 +49,7 @@ const strokeGrid = (
   zoom: Zoom,
   width: number,
   height: number,
+  renderRulers: boolean,
 ) => {
   const offsetX = (scrollX % gridSize) - gridSize;
   const offsetY = (scrollY % gridSize) - gridSize;
@@ -56,19 +57,10 @@ const strokeGrid = (
   const actualGridSize = gridSize * zoom.value;
   const spaceWidth = 1 / zoom.value;
 
-  const rulerWidth = 20; // Ширина линейки в пикселях
-  const textOffset = 4; // Отступ текста от линейки
+  const rulerWidth = 30;
+  const textOffset = 8;
 
   context.save();
-
-  // Смещение для четких линий
-  let translateX = 0;
-  let translateY = 0;
-  if (zoom.value === 1) {
-    translateX = offsetX % 1 ? 0 : 0.5;
-    translateY = offsetY % 1 ? 0 : 0.5;
-    context.translate(translateX, translateY);
-  }
 
   // Offset rendering by 0.5 to ensure that 1px wide lines are crisp.
   // We only do this when zoomed to 100% because otherwise the offset is
@@ -98,24 +90,26 @@ const strokeGrid = (
     context.lineTo(x, Math.ceil(offsetY + height + gridSize * 2));
     context.stroke();
 
-    // --- Отрисовка вертикальной линейки ---
-    context.beginPath();
-    context.setLineDash([]);
-    context.strokeStyle = "black"; // Цвет меток
-    context.lineWidth = 1;
-    context.moveTo(x, 0); // Начало метки на линейке
-    context.lineTo(x, isBold ? rulerWidth : rulerWidth / 2); // Конец метки на линейке
-    context.stroke();
+    if (renderRulers) {
+      context.beginPath();
+      context.setLineDash([]);
+      context.strokeStyle = "black";
+      context.lineWidth = 1;
+      context.moveTo(x, 0);
+      context.lineTo(x, isBold ? rulerWidth : rulerWidth / 2);
+      context.stroke();
 
-    if (isBold) {
-      // Добавляем текст на вертикальной линейке
-      const text = Math.round((x - offsetX - scrollX) / (gridStep * gridSize));
+      if (isBold) {
+        const text = Math.round(
+          (x - offsetX - scrollX) / (gridStep * gridSize),
+        );
 
-      context.fillText(
-        text.toString(),
-        x + textOffset,
-        rulerWidth - translateY - textOffset,
-      );
+        context.fillText(
+          text.toString(),
+          x + textOffset,
+          rulerWidth - textOffset,
+        );
+      }
     }
   }
 
@@ -137,32 +131,33 @@ const strokeGrid = (
     context.lineTo(Math.ceil(offsetX + width + gridSize * 2), y);
     context.stroke();
 
-    // --- Отрисовка горизонтальной линейки ---
-    context.beginPath();
-    context.setLineDash([]);
-    context.strokeStyle = "black"; // Цвет меток
-    context.lineWidth = 1;
-    context.moveTo(0, y); // Начало метки на линейке
-    context.lineTo(isBold ? rulerWidth : rulerWidth / 2, y); // Конец метки на линейке
-    context.stroke();
+    if (renderRulers) {
+      context.beginPath();
+      context.setLineDash([]);
+      context.strokeStyle = "black";
+      context.lineWidth = 1;
+      context.moveTo(0, y);
+      context.lineTo(isBold ? rulerWidth : rulerWidth / 2, y);
+      context.stroke();
 
-    if (isBold) {
-      // Добавляем текст на горизонтальной линейке
-      const text = Math.round((y - offsetY - scrollY) / (gridStep * gridSize));
+      if (isBold) {
+        const text = Math.round(
+          (y - offsetY - scrollY) / (gridStep * gridSize),
+        );
 
-      context.fillText(
-        text.toString(),
-        rulerWidth - translateX - textOffset,
-        y - textOffset,
-      );
+        context.fillText(
+          text.toString(),
+          rulerWidth - textOffset,
+          y - textOffset,
+        );
+      }
     }
   }
 
-  // --- Отрисовка основы линеек ---
   context.beginPath();
-  context.fillStyle = "rgba(211, 211, 211, 0.5)"; // Цвет фона линейки
-  context.fillRect(-translateX, -translateY, rulerWidth, height + translateY); // Заливка фона вертикальной линейки
-  context.fillRect(-translateX, -translateY, width + translateX, rulerWidth); // Заливка фона горизонтальной линейки
+  context.fillStyle = "rgba(0, 0, 0, 0.1)";
+  context.fillRect(0, 0, rulerWidth, height);
+  context.fillRect(0, 0, width, rulerWidth);
 
   context.restore();
 };
@@ -308,6 +303,7 @@ const _renderStaticScene = ({
       appState.zoom,
       normalizedWidth / appState.zoom.value,
       normalizedHeight / appState.zoom.value,
+      !isExporting,
     );
   }
 
