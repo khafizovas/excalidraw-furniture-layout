@@ -90,3 +90,4 @@ export { actionToggleLinearEditor } from "./actionLinearEditor";
 export { actionToggleSearchMenu } from "./actionToggleSearchMenu";
 
 export { actionToggleCropEditor } from "./actionCropEditor";
+export { actionToggleImageResize } from "./actionToggleImageResize";

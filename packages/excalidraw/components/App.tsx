@@ -36,6 +36,7 @@ import {
   actionToggleLinearEditor,
   actionToggleObjectsSnapMode,
   actionToggleCropEditor,
+  actionToggleImageResize,
 } from "../actions";
 import { createRedoAction, createUndoAction } from "../actions/actionHistory";
 import { ActionManager } from "../actions/manager";
@@ -693,6 +694,7 @@ class App extends React.Component<AppProps, AppState> {
       name,
       width: window.innerWidth,
       height: window.innerHeight,
+      imageResizeRatio: true,
     };
 
     this.id = nanoid();
@@ -10231,7 +10233,8 @@ class App extends React.Component<AppProps, AppState> {
         y: pointerCoords.y,
         width: distance(pointerDownState.origin.x, pointerCoords.x),
         height: distance(pointerDownState.origin.y, pointerCoords.y),
-        shouldMaintainAspectRatio: shouldMaintainAspectRatio(event),
+        shouldMaintainAspectRatio:
+          this.state.imageResizeRatio || shouldMaintainAspectRatio(event),
         shouldResizeFromCenter: shouldResizeFromCenter(event),
         zoom: this.state.zoom.value,
         informMutation,
@@ -10294,7 +10297,7 @@ class App extends React.Component<AppProps, AppState> {
       width: distance(pointerDownState.originInGrid.x, gridX),
       height: distance(pointerDownState.originInGrid.y, gridY),
       shouldMaintainAspectRatio: isImageElement(newElement)
-        ? !shouldMaintainAspectRatio(event)
+        ? this.state.imageResizeRatio || !shouldMaintainAspectRatio(event)
         : shouldMaintainAspectRatio(event),
       shouldResizeFromCenter: shouldResizeFromCenter(event),
       zoom: this.state.zoom.value,
@@ -10503,9 +10506,7 @@ class App extends React.Component<AppProps, AppState> {
         this.scene.getElementsMapIncludingDeleted(),
         shouldRotateWithDiscreteAngle(event),
         shouldResizeFromCenter(event),
-        selectedElements.some((element) => isImageElement(element))
-          ? !shouldMaintainAspectRatio(event)
-          : shouldMaintainAspectRatio(event),
+        shouldMaintainAspectRatio(event) || this.state.imageResizeRatio,
         resizeX,
         resizeY,
         pointerDownState.resize.center.x,
@@ -10594,6 +10595,7 @@ class App extends React.Component<AppProps, AppState> {
       actionRemoveAllElementsFromFrame,
       CONTEXT_MENU_SEPARATOR,
       actionToggleCropEditor,
+      actionToggleImageResize,
       CONTEXT_MENU_SEPARATOR,
       ...options,
       CONTEXT_MENU_SEPARATOR,

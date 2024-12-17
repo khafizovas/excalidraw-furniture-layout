@@ -133,6 +133,9 @@ export const SelectedShapeActions = ({
     targetElements.length === 1 &&
     isImageElement(targetElements[0]);
 
+  const showToggleImageResizeAction =
+    targetElements.length === 1 && isImageElement(targetElements[0]);
+
   return (
     <div className="panelColumn">
       <div>
@@ -252,6 +255,7 @@ export const SelectedShapeActions = ({
             {renderAction("ungroup")}
             {showLinkIcon && renderAction("hyperlink")}
             {showCropEditorAction && renderAction("cropEditor")}
+            {showToggleImageResizeAction && renderAction("toggleImageResize")}
             {showLineEditorAction && renderAction("toggleLinearEditor")}
           </div>
         </fieldset>

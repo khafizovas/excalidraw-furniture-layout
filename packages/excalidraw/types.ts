@@ -260,6 +260,7 @@ export interface AppState {
    * - set on pointer down when it's selected and the active tool is selection
    */
   resizingElement: NonDeletedExcalidrawElement | null;
+  imageResizeRatio: boolean;
   /**
    * multiElement is for multi-point linear element that's created by clicking as opposed to dragging
    * - when set and present, the editor will handle linear element creation logic accordingly
