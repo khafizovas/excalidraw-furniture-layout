@@ -11,6 +11,10 @@ export const renderSelectedLineSize = (
   appState: InteractiveCanvasAppState,
   line: ExcalidrawLinearElement,
 ): void => {
+  if (line.points.length > 2) {
+    return;
+  }
+
   const { gridStep = 0, gridSize = 0 } = appState;
   const { strokeColor, width } = line;
 
