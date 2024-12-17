@@ -53,7 +53,7 @@ const getGroupRectangleSizeLabelCoord = (
   offset: number,
 ): Coordinates2D => {
   return {
-    x: rectangle.x2 + offset,
+    x: rectangle.x2 - 4 * offset,
     y: rectangle.y1 - offset,
   };
 };
