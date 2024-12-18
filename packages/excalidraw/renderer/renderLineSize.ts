@@ -31,7 +31,7 @@ const getLineSizeLabelCoord = (
   const { angle } = line;
 
   const center = getLineCenter(line);
-  const rightPoint = getLineRightPoint(line, angle);
+  const rightPoint = getLineRightPoint(line);
 
   const vector = getLineSizeLabelVector(center, rightPoint);
   const rotatedVector = getLineSizeLabelRotatedVector(vector, angle);
@@ -51,17 +51,18 @@ const getLineCenter = (line: ExcalidrawLinearElement): Coordinates2D => {
   };
 };
 
-const getLineRightPoint = (
-  line: ExcalidrawLinearElement,
-  angle: number,
-): Coordinates2D => {
-  const { x, y, points } = line;
+const getLineRightPoint = (line: ExcalidrawLinearElement): Coordinates2D => {
+  const { x, y, points, width, height, angle } = line;
 
   const firstPoint = points[0];
   const lastPoint = points[points.length - 1];
 
   const isLastRight = lastPoint[0] > firstPoint[0];
-  const isUpsideDown = angle > Math.PI / 2 && angle < (3 * Math.PI) / 2;
+
+  const initialAngle = Math.atan2(height, width);
+  const absoluteAngle = getNormalizedAngle(initialAngle + angle);
+
+  const isUpsideDown = Math.abs(absoluteAngle) > Math.PI / 2;
 
   if (isLastRight && !isUpsideDown) {
     return {
@@ -74,6 +75,20 @@ const getLineRightPoint = (
     x: x + firstPoint[0],
     y: y + firstPoint[1],
   };
+};
+
+// [-pi, pi]
+const getNormalizedAngle = (angle: number): number => {
+  let normalizedAngle = angle;
+
+  while (normalizedAngle > Math.PI) {
+    normalizedAngle -= 2 * Math.PI;
+  }
+  while (normalizedAngle < -Math.PI) {
+    normalizedAngle += 2 * Math.PI;
+  }
+
+  return normalizedAngle;
 };
 
 const getLineSizeLabelVector = (
