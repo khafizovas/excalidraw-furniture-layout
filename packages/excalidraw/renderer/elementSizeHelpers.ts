@@ -63,7 +63,11 @@ export const writeElementSizeToCanvas = (
   context.textAlign = "left";
   context.textBaseline = "top";
 
+  context.shadowColor = "#fff";
+  context.shadowBlur = 4;
+
   context.fillText(labelText, x, y);
+  context.shadowBlur = 0;
 };
 
 // Private
