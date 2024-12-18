@@ -15,11 +15,13 @@ export const renderSelectedLineSize = (
     return;
   }
 
+  console.log("Debug", line);
+
   const { gridStep = 0, gridSize = 0 } = appState;
-  const { strokeColor, width } = line;
+  const { strokeColor, width, height } = line;
 
   const labelPosition = getLineSizeLabelCoord(line, gridSize);
-  const labelText = getLineSizeLabelText(width, gridSize, gridStep);
+  const labelText = getLineSizeLabelText(width, height, gridSize, gridStep);
 
   writeLineSizeToCanvas(context, labelText, labelPosition, strokeColor);
 };
@@ -115,11 +117,15 @@ const getLineSizeLabelRotatedVector = (
 
 const getLineSizeLabelText = (
   width: number,
+  height: number,
   gridSize: number,
   gridStep: number,
 ): string => {
   const metreSize = gridSize * gridStep;
-  const sizeInMeters = Math.floor((10 * width) / metreSize) / 10;
+  const sizeInMeters =
+    Math.floor(
+      (10 * Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2))) / metreSize,
+    ) / 10;
 
   return `${sizeInMeters} м`;
 };
