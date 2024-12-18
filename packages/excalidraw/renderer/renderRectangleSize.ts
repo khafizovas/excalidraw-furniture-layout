@@ -4,11 +4,12 @@ import type {
   ExcalidrawRectangleElement,
 } from "../element/types";
 import type { InteractiveCanvasAppState } from "../types";
-
-interface Coordinates2D {
-  x: number;
-  y: number;
-}
+import type { Coordinates2D } from "./elementSizeHelpers";
+import {
+  getElementSizeLabelCoord,
+  getElementSizeLabelText,
+  writeElementSizeToCanvas,
+} from "./elementSizeHelpers";
 
 export interface GroupSelectionRectangle {
   type: "group";
@@ -38,14 +39,23 @@ export const renderSelectedRectangleSize = (
   let labelText;
 
   if (rectangle.type !== "group") {
-    labelPosition = getRectangleSizeLabelCoord(rectangle, gridSize);
+    labelPosition = getElementSizeLabelCoord(
+      rectangle,
+      getRectangleSizeLabelCorner,
+      gridSize,
+    );
     labelText = getRectangleSizeLabelText(rectangle, gridSize, gridStep);
   } else {
     labelPosition = getGroupRectangleSizeLabelCoord(rectangle, gridSize);
-    labelText = getGroupRectangleSizeLabelText(rectangle, gridSize, gridStep);
+    labelText = getElementSizeLabelText(
+      rectangle.x2 - rectangle.x1,
+      rectangle.y2 - rectangle.y1,
+      gridSize,
+      gridStep,
+    );
   }
 
-  writeRectangleSizeToCanvas(context, labelText, labelPosition, strokeColor);
+  writeElementSizeToCanvas(context, labelText, labelPosition, strokeColor);
 };
 
 const getGroupRectangleSizeLabelCoord = (
@@ -55,52 +65,6 @@ const getGroupRectangleSizeLabelCoord = (
   return {
     x: rectangle.x2 - 4 * offset,
     y: rectangle.y1 - offset,
-  };
-};
-
-const getGroupRectangleSizeLabelText = (
-  rectangle: GroupSelectionRectangle,
-  gridSize: number,
-  gridStep: number,
-): string => {
-  const width = rectangle.x2 - rectangle.x1;
-  const height = rectangle.y2 - rectangle.y1;
-
-  const metreSize = gridSize * gridStep;
-
-  const widthInMeters = Math.floor((10 * width) / metreSize) / 10;
-  const heightInMeters = Math.floor((10 * height) / metreSize) / 10;
-
-  return `${widthInMeters}м x ${heightInMeters}м`;
-};
-
-const getRectangleSizeLabelCoord = (
-  rectangle: SelectedRectangleElement,
-  offset: number,
-): Coordinates2D => {
-  const center = getRectangleCenter(rectangle);
-  const corner = getRectangleSizeLabelCorner(rectangle, offset);
-
-  const vector = getRectangleSizeLabelVector(center, corner);
-  const rotatedVector = getRotatedRectangleSizeLabelVector(
-    vector,
-    rectangle.angle,
-  );
-
-  return {
-    x: center.x + rotatedVector.x,
-    y: center.y + rotatedVector.y,
-  };
-};
-
-const getRectangleCenter = (
-  rectangle: SelectedRectangleElement,
-): Coordinates2D => {
-  const { x, y, width, height } = rectangle;
-
-  return {
-    x: x + width / 2,
-    y: y + height / 2,
   };
 };
 
@@ -125,31 +89,6 @@ const getRectangleSizeLabelCorner = (
   return { x: x + width + offset, y: y - offset };
 };
 
-const getRectangleSizeLabelVector = (
-  center: Coordinates2D,
-  corner: Coordinates2D,
-): Coordinates2D => {
-  const { x: centerX, y: centerY } = center;
-  const { x: cornerX, y: cornerY } = corner;
-
-  return {
-    x: cornerX - centerX,
-    y: cornerY - centerY,
-  };
-};
-
-const getRotatedRectangleSizeLabelVector = (
-  vector: Coordinates2D,
-  angle: number,
-): Coordinates2D => {
-  const { x, y } = vector;
-
-  return {
-    x: Math.cos(angle) * x - Math.sin(angle) * y,
-    y: Math.sin(angle) * x + Math.cos(angle) * y,
-  };
-};
-
 const getRectangleSizeLabelText = (
   rectangle: SelectedRectangleElement,
   gridSize: number,
@@ -164,29 +103,12 @@ const getRectangleSizeLabelText = (
   const rotatedWidth = isUpsideDown ? height : width;
   const rotatedHeight = isUpsideDown ? width : height;
 
-  const metreSize = gridSize * gridStep;
+  const sizeLabelText = getElementSizeLabelText(
+    rotatedWidth,
+    rotatedHeight,
+    gridSize,
+    gridStep,
+  );
 
-  const widthInMeters = Math.floor((10 * rotatedWidth) / metreSize) / 10;
-  const heightInMeters = Math.floor((10 * rotatedHeight) / metreSize) / 10;
-
-  const widthStr = `${widthInMeters}м`;
-  const heightStr = `${heightInMeters}м`;
-
-  return `${widthStr} x ${heightStr}`;
-};
-
-const writeRectangleSizeToCanvas = (
-  context: CanvasRenderingContext2D,
-  labelText: string,
-  labelPosition: { x: number; y: number },
-  strokeColor: string,
-): void => {
-  const { x, y } = labelPosition;
-
-  context.fillStyle = strokeColor;
-  context.font = "16px sans-serif";
-  context.textAlign = "left";
-  context.textBaseline = "top";
-
-  context.fillText(labelText, x, y);
+  return sizeLabelText;
 };
