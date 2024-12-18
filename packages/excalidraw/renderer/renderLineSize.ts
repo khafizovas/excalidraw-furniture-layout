@@ -39,41 +39,32 @@ const getLineRightPoint = (
   line: ExcalidrawLinearElement,
   offset: number,
 ): Coordinates2D => {
-  const { x, y, points, width, height, angle } = line;
+  const { x, y, points, angle, width, height } = line;
 
-  const firstPoint = points[0];
-  const lastPoint = points[points.length - 1];
+  const endPoint = points[1];
+  const isEndPointLeft = endPoint[0] < 0;
 
-  const isLastRight = lastPoint[0] > firstPoint[0];
+  const leftPoint = isEndPointLeft
+    ? { x: x + endPoint[0], y: y + endPoint[1] }
+    : { x, y };
+  const rightPoint = isEndPointLeft
+    ? { x, y }
+    : { x: x + endPoint[0], y: y + endPoint[1] };
 
   const initialAngle = Math.atan2(height, width);
-  const absoluteAngle = getNormalizedAngle(initialAngle + angle);
 
-  const isUpsideDown = Math.abs(absoluteAngle) > Math.PI / 2;
-
-  if (isLastRight && !isUpsideDown) {
-    return {
-      x: x + lastPoint[0] + offset,
-      y: y + lastPoint[1] - offset,
-    };
+  let absoluteAngle = angle - initialAngle;
+  if (absoluteAngle < 0) {
+    absoluteAngle += 2 * Math.PI;
   }
 
-  return {
-    x: x + firstPoint[0] + offset,
-    y: y + firstPoint[1] - offset,
-  };
-};
+  const normalizedAngle = absoluteAngle % (2 * Math.PI);
+  const shouldSwapPoints =
+    normalizedAngle > Math.PI / 2 && normalizedAngle < Math.PI;
 
-// [-pi, pi]
-const getNormalizedAngle = (angle: number): number => {
-  let normalizedAngle = angle;
+  const resultRightPoint = shouldSwapPoints
+    ? { x: leftPoint.x - offset, y: leftPoint.y - offset }
+    : { x: rightPoint.x + offset, y: rightPoint.y - offset };
 
-  while (normalizedAngle > Math.PI) {
-    normalizedAngle -= 2 * Math.PI;
-  }
-  while (normalizedAngle < -Math.PI) {
-    normalizedAngle += 2 * Math.PI;
-  }
-
-  return normalizedAngle;
+  return resultRightPoint;
 };

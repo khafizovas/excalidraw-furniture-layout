@@ -70,6 +70,19 @@ export const writeElementSizeToCanvas = (
 const getElementCenter = (element: ExcalidrawElement): Coordinates2D => {
   const { x, y, width, height } = element;
 
+  const isLinear = "points" in element;
+  if (isLinear) {
+    const isRTL = element.points[1][0] < 0;
+    const isDTT = element.points[1][1] < 0;
+
+    const coeff = { x: isRTL ? -1 : 1, y: isDTT ? -1 : 1 };
+
+    return {
+      x: x + (coeff.x * width) / 2,
+      y: y + (coeff.y * height) / 2,
+    };
+  }
+
   return {
     x: x + width / 2,
     y: y + height / 2,
