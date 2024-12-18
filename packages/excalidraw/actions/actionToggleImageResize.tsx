@@ -3,10 +3,11 @@ import { cropIcon } from "../components/icons";
 import { StoreAction } from "../store";
 import { ToolButton } from "../components/ToolButton";
 import { isImageElement } from "../element/typeChecks";
+import { t } from "../i18n";
 
 export const actionToggleImageResize = register({
   name: "toggleImageResize",
-  label: "Непропорциональное масштабирование",
+  label: "helpDialog.imageResizeRatio",
   icon: cropIcon,
   viewMode: true,
   trackEvent: { category: "menu" },
@@ -25,7 +26,7 @@ export const actionToggleImageResize = register({
     return selectedElements.length === 1 && isImageElement(selectedElements[0]);
   },
   PanelComponent: ({ appState, updateData, app }) => {
-    const label = "Непропорциональное масштабирование";
+    const label = t("helpDialog.imageResizeRatio");
 
     return (
       <ToolButton
