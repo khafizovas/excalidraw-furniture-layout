@@ -15,8 +15,6 @@ export const renderSelectedLineSize = (
     return;
   }
 
-  console.log("Debug", line);
-
   const { gridStep = 0, gridSize = 0 } = appState;
   const { strokeColor, width, height } = line;
 
