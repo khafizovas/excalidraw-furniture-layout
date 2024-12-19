@@ -28,6 +28,7 @@ import {
   isElbowArrow,
   isImageElement,
   isLinearElement,
+  isScalingTypeTogglableElement,
   isTextElement,
 } from "../element/typeChecks";
 import clsx from "clsx";
@@ -134,7 +135,8 @@ export const SelectedShapeActions = ({
     isImageElement(targetElements[0]);
 
   const showToggleImageResizeAction =
-    targetElements.length === 1 && isImageElement(targetElements[0]);
+    targetElements.length === 1 &&
+    isScalingTypeTogglableElement(targetElements[0]);
 
   return (
     <div className="panelColumn">

@@ -2,7 +2,7 @@ import { register } from "./register";
 import { cropIcon } from "../components/icons";
 import { StoreAction } from "../store";
 import { ToolButton } from "../components/ToolButton";
-import { isImageElement } from "../element/typeChecks";
+import { isScalingTypeTogglableElement } from "../element/typeChecks";
 import { t } from "../i18n";
 
 export const actionToggleImageResize = register({
@@ -11,7 +11,7 @@ export const actionToggleImageResize = register({
   icon: cropIcon,
   viewMode: true,
   trackEvent: { category: "menu" },
-  keywords: ["image", "resize"],
+  keywords: ["resize"],
   perform(elements, appState, _, app) {
     return {
       appState: {
@@ -23,7 +23,10 @@ export const actionToggleImageResize = register({
   },
   predicate: (elements, appState, _, app) => {
     const selectedElements = app.scene.getSelectedElements(appState);
-    return selectedElements.length === 1 && isImageElement(selectedElements[0]);
+    return (
+      selectedElements.length === 1 &&
+      isScalingTypeTogglableElement(selectedElements[0])
+    );
   },
   PanelComponent: ({ appState, updateData, app }) => {
     const label = t("helpDialog.imageResizeRatio");

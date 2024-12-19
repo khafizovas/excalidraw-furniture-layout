@@ -26,6 +26,8 @@ import type {
   PointBinding,
   FixedPointBinding,
   ExcalidrawFlowchartNodeElement,
+  ExcalidrawRectangleElement,
+  ExcalidrawEllipseElement,
 } from "./types";
 
 export const isInitializedImageElement = (
@@ -336,3 +338,12 @@ export const isBounds = (box: unknown): box is Bounds =>
   typeof box[1] === "number" &&
   typeof box[2] === "number" &&
   typeof box[3] === "number";
+
+export const isScalingTypeTogglableElement = (
+  element: ExcalidrawElement,
+): element is
+  | ExcalidrawRectangleElement
+  | ExcalidrawEllipseElement
+  | ExcalidrawImageElement => {
+  return ["rectangle", "ellipse", "image"].includes(element.type);
+};

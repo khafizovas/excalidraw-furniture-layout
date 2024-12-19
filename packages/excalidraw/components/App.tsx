@@ -10234,7 +10234,7 @@ class App extends React.Component<AppProps, AppState> {
         width: distance(pointerDownState.origin.x, pointerCoords.x),
         height: distance(pointerDownState.origin.y, pointerCoords.y),
         shouldMaintainAspectRatio:
-          this.state.imageResizeRatio || shouldMaintainAspectRatio(event),
+          !this.state.imageResizeRatio || shouldMaintainAspectRatio(event),
         shouldResizeFromCenter: shouldResizeFromCenter(event),
         zoom: this.state.zoom.value,
         informMutation,
@@ -10297,7 +10297,7 @@ class App extends React.Component<AppProps, AppState> {
       width: distance(pointerDownState.originInGrid.x, gridX),
       height: distance(pointerDownState.originInGrid.y, gridY),
       shouldMaintainAspectRatio: isImageElement(newElement)
-        ? this.state.imageResizeRatio || !shouldMaintainAspectRatio(event)
+        ? !this.state.imageResizeRatio || !shouldMaintainAspectRatio(event)
         : shouldMaintainAspectRatio(event),
       shouldResizeFromCenter: shouldResizeFromCenter(event),
       zoom: this.state.zoom.value,
@@ -10506,7 +10506,7 @@ class App extends React.Component<AppProps, AppState> {
         this.scene.getElementsMapIncludingDeleted(),
         shouldRotateWithDiscreteAngle(event),
         shouldResizeFromCenter(event),
-        shouldMaintainAspectRatio(event) || this.state.imageResizeRatio,
+        !this.state.imageResizeRatio || shouldMaintainAspectRatio(event),
         resizeX,
         resizeY,
         pointerDownState.resize.center.x,
