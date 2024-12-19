@@ -4,6 +4,7 @@ import { StoreAction } from "../store";
 import { ToolButton } from "../components/ToolButton";
 import { isScalingTypeTogglableElement } from "../element/typeChecks";
 import { t } from "../i18n";
+import { elementsAreInSameGroup } from "../groups";
 
 export const actionToggleImageResize = register({
   name: "toggleImageResize",
@@ -23,10 +24,9 @@ export const actionToggleImageResize = register({
   },
   predicate: (elements, appState, _, app) => {
     const selectedElements = app.scene.getSelectedElements(appState);
-    return (
-      selectedElements.length === 1 &&
-      isScalingTypeTogglableElement(selectedElements[0])
-    );
+    return selectedElements.length === 1
+      ? isScalingTypeTogglableElement(selectedElements[0])
+      : elementsAreInSameGroup(selectedElements);
   },
   PanelComponent: ({ appState, updateData, app }) => {
     const label = t("helpDialog.imageResizeRatio");

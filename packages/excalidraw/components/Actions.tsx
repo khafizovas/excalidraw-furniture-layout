@@ -52,6 +52,7 @@ import {
 import { KEYS } from "../keys";
 import { useTunnels } from "../context/tunnels";
 import { CLASSES, TOOL_TYPE } from "../constants";
+import { elementsAreInSameGroup } from "../groups";
 
 export const canChangeStrokeColor = (
   appState: UIAppState,
@@ -69,7 +70,7 @@ export const canChangeStrokeColor = (
 
   return (
     (hasStrokeColor(appState.activeTool.type) &&
-      appState.activeTool.type !== "image" &&
+      (appState.activeTool.type as string) !== "image" &&
       commonSelectedType !== "image" &&
       commonSelectedType !== "frame" &&
       commonSelectedType !== "magicframe") ||
@@ -135,8 +136,9 @@ export const SelectedShapeActions = ({
     isImageElement(targetElements[0]);
 
   const showToggleImageResizeAction =
-    targetElements.length === 1 &&
-    isScalingTypeTogglableElement(targetElements[0]);
+    targetElements.length === 1
+      ? isScalingTypeTogglableElement(targetElements[0])
+      : elementsAreInSameGroup(targetElements);
 
   return (
     <div className="panelColumn">

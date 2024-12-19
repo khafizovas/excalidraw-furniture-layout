@@ -52,7 +52,6 @@ import {
 } from "./textElement";
 import { wrapText } from "./textWrapping";
 import { LinearElementEditor } from "./linearElementEditor";
-import { isInGroup } from "../groups";
 import { mutateElbowArrow } from "./routing";
 import type { GlobalPoint } from "../../math";
 import {
@@ -865,10 +864,7 @@ export const resizeMultipleElements = (
   const keepAspectRatio =
     shouldMaintainAspectRatio ||
     targetElements.some(
-      (item) =>
-        item.latest.angle !== 0 ||
-        isTextElement(item.latest) ||
-        isInGroup(item.latest),
+      (item) => item.latest.angle !== 0 || isTextElement(item.latest),
     );
 
   if (keepAspectRatio) {
