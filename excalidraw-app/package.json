@@ -50,10 +50,13 @@
     "start:production": "yarn build && yarn serve",
     "serve": "npx http-server build -a localhost -p 5001 -o",
     "build:preview": "yarn build && vite preview --port 5000",
+    "postbuild": "replace-in-file \"./build/index.html\" --config-file=\"postbuild-config.json\"",
     "push:gh-pages": "push-dir --dir=build --branch=gh-pages",
-    "deploy": "yarn build && yarn push:gh-pages"
+    "deploy": "yarn build && yarn postbuild && yarn push:gh-pages"
   },
   "devDependencies": {
+    "push-dir": "0.4.1",
+    "replace-in-file": "8.3.0",
     "vite-plugin-sitemap": "0.7.1"
   }
 }
