@@ -1,4 +1,7 @@
-import { FILE_LOAD_URL, FILE_SAVE_URL } from "../../packages/excalidraw/constants";
+import {
+  FILE_LOAD_URL,
+  FILE_SAVE_URL,
+} from "../../packages/excalidraw/constants";
 import {
   compressData,
   decompressData,
