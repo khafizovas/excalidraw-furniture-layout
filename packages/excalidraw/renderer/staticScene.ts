@@ -49,7 +49,7 @@ const strokeGrid = (
   zoom: Zoom,
   width: number,
   height: number,
-  renderRulers: boolean,
+  renderRulersOnly: boolean,
 ) => {
   const offsetX = (scrollX % gridSize) - gridSize;
   const offsetY = (scrollY % gridSize) - gridSize;
@@ -70,6 +70,17 @@ const strokeGrid = (
     context.translate(offsetX % 1 ? 0 : 0.5, offsetY % 1 ? 0 : 0.5);
   }
 
+  if (renderRulersOnly) {
+    context.beginPath();
+    context.fillStyle = GridLineColor.Bold;
+    context.fillRect(0, 0, rulerWidth, height);
+    context.fillRect(0, 0, width, rulerWidth);
+  }
+
+  context.restore();
+
+  context.save();
+
   // vertical lines
   for (let x = offsetX; x < offsetX + width + gridSize * 2; x += gridSize) {
     const isBold =
@@ -81,20 +92,11 @@ const strokeGrid = (
 
     const lineWidth = Math.min(1 / zoom.value, isBold ? 4 : 1);
     context.lineWidth = lineWidth;
-    const lineDash = [lineWidth * 3, spaceWidth + (lineWidth + spaceWidth)];
 
-    context.beginPath();
-    context.setLineDash(isBold ? [] : lineDash);
-    context.strokeStyle = isBold ? GridLineColor.Bold : GridLineColor.Regular;
-    context.moveTo(x, offsetY - gridSize);
-    context.lineTo(x, Math.ceil(offsetY + height + gridSize * 2));
-    context.stroke();
-
-    if (renderRulers) {
+    if (renderRulersOnly) {
       context.beginPath();
       context.setLineDash([]);
       context.strokeStyle = "black";
-      context.lineWidth = 1;
       context.moveTo(x, 0);
       context.lineTo(x, isBold ? rulerWidth : rulerWidth / 2);
       context.stroke();
@@ -110,6 +112,15 @@ const strokeGrid = (
           rulerWidth - textOffset,
         );
       }
+    } else {
+      const lineDash = [lineWidth * 3, spaceWidth + (lineWidth + spaceWidth)];
+
+      context.beginPath();
+      context.setLineDash(isBold ? [] : lineDash);
+      context.strokeStyle = isBold ? GridLineColor.Bold : GridLineColor.Regular;
+      context.moveTo(x, offsetY - gridSize);
+      context.lineTo(x, Math.ceil(offsetY + height + gridSize * 2));
+      context.stroke();
     }
   }
 
@@ -122,20 +133,11 @@ const strokeGrid = (
 
     const lineWidth = Math.min(1 / zoom.value, isBold ? 4 : 1);
     context.lineWidth = lineWidth;
-    const lineDash = [lineWidth * 3, spaceWidth + (lineWidth + spaceWidth)];
 
-    context.beginPath();
-    context.setLineDash(isBold ? [] : lineDash);
-    context.strokeStyle = isBold ? GridLineColor.Bold : GridLineColor.Regular;
-    context.moveTo(offsetX - gridSize, y);
-    context.lineTo(Math.ceil(offsetX + width + gridSize * 2), y);
-    context.stroke();
-
-    if (renderRulers) {
+    if (renderRulersOnly) {
       context.beginPath();
       context.setLineDash([]);
       context.strokeStyle = "black";
-      context.lineWidth = 1;
       context.moveTo(0, y);
       context.lineTo(isBold ? rulerWidth : rulerWidth / 2, y);
       context.stroke();
@@ -151,13 +153,17 @@ const strokeGrid = (
           y - textOffset,
         );
       }
+    } else {
+      const lineDash = [lineWidth * 3, spaceWidth + (lineWidth + spaceWidth)];
+
+      context.beginPath();
+      context.setLineDash(isBold ? [] : lineDash);
+      context.strokeStyle = isBold ? GridLineColor.Bold : GridLineColor.Regular;
+      context.moveTo(offsetX - gridSize, y);
+      context.lineTo(Math.ceil(offsetX + width + gridSize * 2), y);
+      context.stroke();
     }
   }
-
-  context.beginPath();
-  context.fillStyle = "rgba(0, 0, 0, 0.1)";
-  context.fillRect(0, 0, rulerWidth, height);
-  context.fillRect(0, 0, width, rulerWidth);
 
   context.restore();
 };
@@ -303,7 +309,7 @@ const _renderStaticScene = ({
       appState.zoom,
       normalizedWidth / appState.zoom.value,
       normalizedHeight / appState.zoom.value,
-      !isExporting,
+      false,
     );
   }
 
@@ -484,6 +490,21 @@ const _renderStaticScene = ({
       console.error(error);
     }
   });
+
+  // Rulers
+  if (renderGrid) {
+    strokeGrid(
+      context,
+      appState.gridSize,
+      appState.gridStep,
+      appState.scrollX,
+      appState.scrollY,
+      appState.zoom,
+      normalizedWidth / appState.zoom.value,
+      normalizedHeight / appState.zoom.value,
+      !isExporting,
+    );
+  }
 };
 
 /** throttled to animation framerate */
