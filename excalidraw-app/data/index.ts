@@ -1,3 +1,4 @@
+import { FILE_LOAD_URL, FILE_SAVE_URL } from "../../packages/excalidraw/constants";
 import {
   compressData,
   decompressData,
@@ -29,13 +30,7 @@ import type {
 import type { MakeBrand } from "../../packages/excalidraw/utility-types";
 import { bytesToHexString } from "../../packages/excalidraw/utils";
 import type { WS_SUBTYPES } from "../app_constants";
-import {
-  DELETED_ELEMENT_TIMEOUT,
-  FILE_UPLOAD_MAX_BYTES,
-  ROOM_ID_BYTES,
-} from "../app_constants";
-import { encodeFilesForUpload } from "./FileManager";
-import { saveFilesToFirebase } from "./firebase";
+import { DELETED_ELEMENT_TIMEOUT, ROOM_ID_BYTES } from "../app_constants";
 
 export type SyncableExcalidrawElement = OrderedExcalidrawElement &
   MakeBrand<"SyncableExcalidrawElement">;
@@ -58,9 +53,6 @@ export const getSyncableElements = (
   elements.filter((element) =>
     isSyncableElement(element),
   ) as SyncableExcalidrawElement[];
-
-const BACKEND_V2_GET = import.meta.env.VITE_APP_BACKEND_V2_GET_URL;
-const BACKEND_V2_POST = import.meta.env.VITE_APP_BACKEND_V2_POST_URL;
 
 const generateRoomId = async () => {
   const buffer = new Uint8Array(ROOM_ID_BYTES);
@@ -201,7 +193,7 @@ const importFromBackend = async (
   decryptionKey: string,
 ): Promise<ImportedDataState> => {
   try {
-    const response = await fetch(`${BACKEND_V2_GET}${id}`);
+    const response = await fetch(`${FILE_LOAD_URL}${id}`);
 
     if (!response.ok) {
       window.alert(t("alerts.importBackendFailed"));
@@ -298,15 +290,9 @@ export const exportToBackend = async (
       }
     }
 
-    const filesToUpload = await encodeFilesForUpload({
-      files: filesMap,
-      encryptionKey,
-      maxBytes: FILE_UPLOAD_MAX_BYTES,
-    });
-
-    const response = await fetch(BACKEND_V2_POST, {
+    const response = await fetch(FILE_SAVE_URL, {
       method: "POST",
-      body: payload.buffer,
+      body: payload.buffer as ArrayBuffer,
     });
     const json = await response.json();
     if (json.id) {
@@ -315,11 +301,6 @@ export const exportToBackend = async (
       // of queryParam in order to never send it to the server
       url.hash = `json=${json.id},${encryptionKey}`;
       const urlString = url.toString();
-
-      await saveFilesToFirebase({
-        prefix: `/files/shareLinks/${json.id}`,
-        files: filesToUpload,
-      });
 
       return { url: urlString, errorMessage: null };
     } else if (json.error_class === "RequestTooLargeError") {

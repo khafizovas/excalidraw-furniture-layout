@@ -455,8 +455,13 @@ export const ELEMENT_LINK_KEY = "element";
 // Name of window field with room plan image url
 export const ROOM_PLAN_IMAGE_URL_KEY = "ROOM_PLAN_IMAGE";
 
-// Api entrypoint to save project file
+// API entrypoint to save project file
+// Should return id of saved file
 export const FILE_SAVE_URL = "/api/save-file";
+
+// API entrypoint to load project from server
+// Should return elements and appState
+export const FILE_LOAD_URL = "/api/load-file";
 
 // Whether to save file locally or to send request
 export const SAVE_TO_SERVER = true;
