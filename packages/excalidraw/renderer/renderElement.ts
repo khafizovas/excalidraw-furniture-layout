@@ -64,7 +64,7 @@ import { getVerticalOffset } from "../fonts";
 import { isRightAngleRads } from "../../math";
 import { getCornerRadius } from "../shapes";
 import { getUncroppedImageElement } from "../element/cropElement";
-import { invertCanvasImage } from "./helpers";
+import { applyImageInvertFilter } from "./helpers";
 
 // using a stronger invert (100% vs our regular 93%) and saturate
 // as a temp hack to make images in dark theme look closer to original
@@ -258,7 +258,7 @@ const generateElementCanvas = (
 
   // in dark theme, revert the image color filter
   if (shouldResetImageFilter(element, renderConfig, appState)) {
-    invertCanvasImage(context);
+    applyImageInvertFilter(context);
   }
 
   context.restore();
