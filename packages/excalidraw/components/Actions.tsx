@@ -284,6 +284,8 @@ export const ShapesSwitcher = ({
   const frameToolSelected = activeTool.type === "frame";
   const embeddableToolSelected = activeTool.type === "embeddable";
 
+  const isMobile = app.device.editor.isMobile;
+
   const { TTDDialogTriggerTunnel } = useTunnels();
 
   return (
@@ -338,12 +340,14 @@ export const ShapesSwitcher = ({
         );
       })}
 
-      <LaserPointerButton
-        title={t("toolBar.laser")}
-        checked={appState.activeTool.type === TOOL_TYPE.laser}
-        onChange={() => app.setActiveTool({ type: TOOL_TYPE.laser })}
-        isMobile
-      />
+      {!isMobile && (
+        <LaserPointerButton
+          title={t("toolBar.laser")}
+          checked={appState.activeTool.type === TOOL_TYPE.laser}
+          onChange={() => app.setActiveTool({ type: TOOL_TYPE.laser })}
+          isMobile
+        />
+      )}
 
       <div className="App-toolbar__divider" />
 

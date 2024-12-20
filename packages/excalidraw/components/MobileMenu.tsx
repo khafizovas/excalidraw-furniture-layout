@@ -24,6 +24,8 @@ import { PenModeButton } from "./PenModeButton";
 import { HandButton } from "./HandButton";
 import { isHandToolActive } from "../appState";
 import { useTunnels } from "../context/tunnels";
+import { TOOL_TYPE } from "../constants";
+import { LaserPointerButton } from "./LaserPointerButton";
 
 type MobileMenuProps = {
   appState: UIAppState;
@@ -63,11 +65,14 @@ export const MobileMenu = ({
   UIOptions,
   app,
 }: MobileMenuProps) => {
+  const isMobile = app.device.editor.isMobile;
+
   const {
     WelcomeScreenCenterTunnel,
     MainMenuTunnel,
     DefaultSidebarTriggerTunnel,
   } = useTunnels();
+
   const renderToolbar = () => {
     return (
       <FixedSideContainer side="top" className="App-top-bar">
@@ -107,6 +112,16 @@ export const MobileMenu = ({
                     title={t("toolBar.hand")}
                     isMobile
                   />
+                  {isMobile && (
+                    <LaserPointerButton
+                      title={t("toolBar.laser")}
+                      checked={appState.activeTool.type === TOOL_TYPE.laser}
+                      onChange={() =>
+                        app.setActiveTool({ type: TOOL_TYPE.laser })
+                      }
+                      isMobile
+                    />
+                  )}
                 </div>
               </Stack.Row>
             </Stack.Col>
