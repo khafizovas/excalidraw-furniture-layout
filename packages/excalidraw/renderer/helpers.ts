@@ -73,3 +73,25 @@ export const bootstrapCanvas = ({
 
   return context;
 };
+
+export const invertCanvasImage = (context: CanvasRenderingContext2D) => {
+  const imageData = context.getImageData(
+    0,
+    0,
+    context.canvas.width,
+    context.canvas.height,
+  );
+  const pixels = imageData.data;
+
+  for (let i = 0; i < pixels.length; i += 4) {
+    // Invert RGB values
+    pixels[i] = 255 - pixels[i];
+    pixels[i + 1] = 255 - pixels[i + 1];
+    pixels[i + 2] = 255 - pixels[i + 2];
+
+    // Keep alpha value unchanged
+    pixels[i + 3] = pixels[i + 3];
+  }
+
+  context.putImageData(imageData, 0, 0);
+};

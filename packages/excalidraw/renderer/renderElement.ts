@@ -64,6 +64,7 @@ import { getVerticalOffset } from "../fonts";
 import { isRightAngleRads } from "../../math";
 import { getCornerRadius } from "../shapes";
 import { getUncroppedImageElement } from "../element/cropElement";
+import { invertCanvasImage } from "./helpers";
 
 // using a stronger invert (100% vs our regular 93%) and saturate
 // as a temp hack to make images in dark theme look closer to original
@@ -253,12 +254,12 @@ const generateElementCanvas = (
 
   const rc = rough.canvas(canvas);
 
+  drawElementOnCanvas(element, rc, context, renderConfig, appState);
+
   // in dark theme, revert the image color filter
   if (shouldResetImageFilter(element, renderConfig, appState)) {
-    context.filter = IMAGE_INVERT_FILTER;
+    invertCanvasImage(context);
   }
-
-  drawElementOnCanvas(element, rc, context, renderConfig, appState);
 
   context.restore();
 
