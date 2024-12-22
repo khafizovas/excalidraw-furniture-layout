@@ -141,7 +141,7 @@
     "removeAllElementsFromFrame": "",
     "eyeDropper": "Взять образец цвета с холста",
     "textToDiagram": "Текст в диаграмму",
-    "prompt": "",
+    "prompt": "Запрос",
     "clearCanvas": "Очистить полотно"
   },
   "library": {
@@ -556,9 +556,9 @@
     }
   },
   "mermaid": {
-    "title": "Из Mermaid в Excalidraw",
+    "title": "Из Mermaid",
     "button": "Вставить",
-    "description": "",
+    "description": "В настоящее время поддерживаются только диаграммы <flowchartLink>Flowchart</flowchartLink>,<sequenceLink> Sequence, </sequenceLink> и <classLink>Class </classLink>. Другие типы будут отрисованы как изображения.",
     "syntax": "Синтаксис Mermaid",
     "preview": "Предпросмотр"
   },
@@ -591,5 +591,12 @@
   },
   "visualDebug": {
     "visualDebug": "Визуальная отладка"
+  },
+  "ttdDialog": {
+    "description": "В настоящее время мы используем Mermaid в качестве промежуточного звена, поэтому вы можете получить лучшие результаты, если опишете диаграмму, последовательность, блок-схему и подобное.",
+    "link": "Просмотреть в Mermaid",
+    "limit": "запросов осталось сегодня",
+    "length": "Длина:",
+    "placeholder": "Опишите то, что хотите увидеть..."
   }
 }

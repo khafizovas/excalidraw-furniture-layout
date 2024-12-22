@@ -274,9 +274,7 @@ export const TTDDialogBase = withInternalFallback(
           {!("__fallback" in rest) && (
             <TTDDialogTab className="ttd-dialog-content" tab="text-to-diagram">
               <div className="ttd-dialog-desc">
-                Currently we use Mermaid as a middle step, so you'll get best
-                results if you describe a diagram, workflow, flow chart, and
-                similar.
+                {t("ttdDialog.description")}
               </div>
               <TTDDialogPanels>
                 <TTDDialogPanel
@@ -308,7 +306,7 @@ export const TTDDialogBase = withInternalFallback(
                               : undefined,
                         }}
                       >
-                        {rateLimits.rateLimitRemaining} requests left today
+                        {rateLimits.rateLimitRemaining} {t("ttdDialog.limit")}
                       </div>
                     );
                   }}
@@ -333,7 +331,7 @@ export const TTDDialogBase = withInternalFallback(
                             }
                           }}
                         >
-                          View as Mermaid
+                          {t("ttdDialog.link")}
                           <InlineIcon icon={ArrowRightIcon} />
                         </div>
                       );
@@ -350,7 +348,8 @@ export const TTDDialogBase = withInternalFallback(
                               ratio > 1 ? "var(--color-danger)" : undefined,
                           }}
                         >
-                          Length: {prompt.length}/{MAX_PROMPT_LENGTH}
+                          {t("ttdDialog.length")} {prompt.length}/
+                          {MAX_PROMPT_LENGTH}
                         </div>
                       );
                     }
@@ -361,20 +360,20 @@ export const TTDDialogBase = withInternalFallback(
                   <TTDDialogInput
                     onChange={handleTextChange}
                     input={text}
-                    placeholder={"Describe what you want to see..."}
+                    placeholder={t("ttdDialog.placeholder")}
                     onKeyboardSubmit={() => {
                       refOnGenerate.current();
                     }}
                   />
                 </TTDDialogPanel>
                 <TTDDialogPanel
-                  label="Preview"
+                  label={t("mermaid.preview")}
                   panelAction={{
                     action: () => {
                       console.info("Panel action clicked");
                       insertToEditor({ app, data });
                     },
-                    label: "Insert",
+                    label: t("mermaid.button"),
                     icon: ArrowRightIcon,
                   }}
                 >

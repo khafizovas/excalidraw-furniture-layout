@@ -640,5 +640,12 @@
   },
   "visualDebug": {
     "visualDebug": "Visual Debug"
+  },
+  "ttdDialog": {
+    "description": "Currently we use Mermaid as a middle step, so you'll get best results if you describe a diagram, workflow, flow chart, and similar.",
+    "link": "View as Mermaid",
+    "limit": "requests left today",
+    "length": "Length:",
+    "placeholder": "Describe what you want to see..."
   }
 }
