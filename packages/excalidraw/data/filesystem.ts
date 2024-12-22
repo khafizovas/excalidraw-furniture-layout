@@ -87,7 +87,9 @@ export const fileSave = async (
     fileHandle?: FileSystemHandle | null;
   },
 ) => {
-  if (SAVE_TO_SERVER) {
+  const isExportAsImage = ["png", "svg"].includes(opts.extension);
+
+  if (SAVE_TO_SERVER && !isExportAsImage) {
     try {
       const resolvedBlob = await Promise.resolve(blob);
 
