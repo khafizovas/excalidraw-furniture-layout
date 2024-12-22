@@ -861,13 +861,7 @@ export const resizeMultipleElements = (
       ? (Math.abs(pointerY - anchorY) / height) * resizeFromCenterScale
       : 1;
 
-  const keepAspectRatio =
-    shouldMaintainAspectRatio ||
-    targetElements.some(
-      (item) => item.latest.angle !== 0 || isTextElement(item.latest),
-    );
-
-  if (keepAspectRatio) {
+  if (shouldMaintainAspectRatio) {
     scaleX = scale;
     scaleY = scale;
   }
@@ -972,7 +966,7 @@ export const resizeMultipleElements = (
     ) as ExcalidrawTextElementWithContainer | undefined;
 
     if (boundTextElement) {
-      if (keepAspectRatio) {
+      if (shouldMaintainAspectRatio) {
         const newFontSize = boundTextElement.fontSize * scale;
         if (newFontSize < MIN_FONT_SIZE) {
           return;
