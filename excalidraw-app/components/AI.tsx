@@ -111,6 +111,8 @@ export const AIComponents = ({
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ prompt: input }),
+                credentials: "include",
+                mode: "no-cors",
               },
             );
 
